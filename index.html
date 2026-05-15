@@ -3,80 +3,773 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prathivee — Economist, Writer, Researcher</title>
+  <meta name="description" content="Prathivee studies economies, questions systems, and writes about the forces shaping the world." />
 
-  <title>Portfolio | Prathivee</title>
-  <meta name="description" content="Portfolio of Prathivee Nairy — economics, research, writing, photography, resume, and contact." />
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    /* ── RESET & BASE ───────────────────────────────────────────── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    :root {
+      --bg:           #111a13;
+      --surface:      #182219;
+      --surface-2:    #1f2e21;
+      --green-muted:  #6aad80;
+      --green-bright: #9ddcae;
+      --green-dim:    #3a6b4a;
+      --text-primary: #edeee8;
+      --text-secondary: #a8b8a0;
+      --text-tertiary:  #6a826a;
+      --border:       rgba(100,180,120,0.22);
+      --ease:         cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NOISE TEXTURE OVERLAY ──────────────────────────────────── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0.4;
+    }
+
+    /* ── FLOATING TEXT FRAGMENTS (background atmosphere) ────────── */
+    .fragments {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .fragment {
+      position: absolute;
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: clamp(10px, 1.1vw, 13px);
+      color: var(--text-primary);
+      opacity: 0.045;
+      white-space: nowrap;
+      letter-spacing: 0.02em;
+      line-height: 1.6;
+    }
+
+    /* ── NAV ────────────────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 24px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(to bottom, rgba(12,15,12,0.95) 0%, transparent 100%);
+    }
+    .nav-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px;
+      font-weight: 400;
+      letter-spacing: 0.06em;
+      color: var(--text-primary);
+      text-decoration: none;
+      opacity: 0;
+      animation: fadeUp 0.7s var(--ease) 0.3s forwards;
+    }
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+      opacity: 0;
+      animation: fadeUp 0.7s var(--ease) 0.5s forwards;
+    }
+    .nav-links a {
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.25s ease;
+    }
+    .nav-links a:hover { color: var(--green-bright); }
+
+    /* ── HERO ───────────────────────────────────────────────────── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding: 120px 48px 80px;
+      max-width: 1280px;
+      margin: 0 auto;
+      gap: 48px;
+    }
+
+    .hero-left {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-label {
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--green-muted);
+      margin-bottom: 32px;
+      opacity: 0;
+      animation: fadeUp 0.6s var(--ease) 0.8s forwards;
+    }
+
+    .hero-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(64px, 7.5vw, 112px);
+      font-weight: 300;
+      line-height: 0.92;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      opacity: 0;
+      animation: fadeUp 0.9s var(--ease) 1s forwards;
+    }
+    .hero-name em {
+      font-style: italic;
+      color: var(--green-bright);
+    }
+
+    .hero-divider {
+      width: 48px;
+      height: 1px;
+      background: var(--green-muted);
+      margin: 36px 0;
+      opacity: 0;
+      animation: expandLine 0.8s var(--ease) 1.6s forwards;
+    }
+
+    .hero-tagline {
+      font-size: clamp(15px, 1.4vw, 18px);
+      font-weight: 300;
+      line-height: 1.65;
+      color: var(--text-secondary);
+      max-width: 420px;
+      opacity: 0;
+      animation: fadeUp 0.8s var(--ease) 1.9s forwards;
+    }
+
+    .hero-scroll-cue {
+      margin-top: 64px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      opacity: 0;
+      animation: fadeUp 0.7s var(--ease) 2.4s forwards;
+    }
+    .hero-scroll-cue span {
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+    }
+    .scroll-line {
+      width: 40px;
+      height: 1px;
+      background: var(--text-tertiary);
+      position: relative;
+      overflow: hidden;
+    }
+    .scroll-line::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: var(--green-bright);
+      animation: scanLine 2.5s ease-in-out 3s infinite;
+    }
+
+    /* ── HERO RIGHT — PHOTO COMPOSITION ────────────────────────── */
+    .hero-right {
+      position: relative;
+      height: 580px;
+      opacity: 0;
+      animation: fadeUp 1s var(--ease) 1.2s forwards;
+    }
+
+    /* Primary photo — large, vertically masked */
+    .photo-primary {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 72%;
+      height: 100%;
+      overflow: hidden;
+      border-radius: 4px 4px 120px 4px;
+    }
+    .photo-primary img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      filter: grayscale(15%) contrast(1.05);
+      display: block;
+    }
+    /* Green tint overlay */
+    .photo-primary::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        160deg,
+        rgba(74,124,89,0.22) 0%,
+        transparent 50%,
+        rgba(12,15,12,0.55) 100%
+      );
+      mix-blend-mode: multiply;
+    }
+
+    /* Decorative frame behind photo */
+    .photo-frame {
+      position: absolute;
+      right: -16px;
+      top: 24px;
+      width: 72%;
+      height: 100%;
+      border: 1px solid var(--green-dim);
+      border-radius: 4px 4px 120px 4px;
+      pointer-events: none;
+    }
+
+    /* Floating accent card */
+    .photo-accent {
+      position: absolute;
+      left: 0;
+      bottom: 48px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      width: 52%;
+      backdrop-filter: blur(8px);
+      z-index: 3;
+    }
+    .accent-quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+    }
+    .accent-meta {
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--green-muted);
+    }
+
+    /* ── SECTION DIVIDER ────────────────────────────────────────── */
+    .section-divider {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 48px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      margin-bottom: 56px;
+    }
+    .divider-label {
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      white-space: nowrap;
+    }
+    .divider-line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── GRID SECTION ───────────────────────────────────────────── */
+    .grid-section {
+      padding: 0 48px 120px;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .tile-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-template-rows: auto;
+      gap: 16px;
+    }
+
+    /* Grid placement — editorial asymmetry */
+    .tile-about      { grid-column: 1 / 5;  grid-row: 1; }
+    .tile-articles   { grid-column: 5 / 9;  grid-row: 1; }
+    .tile-papers     { grid-column: 9 / 13; grid-row: 1; }
+    .tile-thoughts   { grid-column: 1 / 6;  grid-row: 2; }
+    .tile-photography{ grid-column: 6 / 10; grid-row: 2; }
+    .tile-news       { grid-column: 10 / 13;grid-row: 2; }
+    .tile-resume     { grid-column: 1 / 13; grid-row: 3; }
+
+    /* ── TILE BASE ──────────────────────────────────────────────── */
+    .tile {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px 28px 24px;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 200px;
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(32px);
+      transition:
+        background 0.3s ease,
+        border-color 0.3s ease,
+        box-shadow 0.3s ease,
+        transform 0.3s ease;
+    }
+
+    /* Stagger reveal via JS class */
+    .tile.visible {
+      opacity: 1;
+      transform: translateY(0);
+      transition:
+        opacity 0.7s var(--ease),
+        transform 0.7s var(--ease),
+        background 0.3s ease,
+        border-color 0.3s ease,
+        box-shadow 0.3s ease;
+    }
+
+    .tile:hover {
+      background: var(--surface-2);
+      border-color: var(--green-dim);
+      box-shadow: 0 0 48px rgba(74,124,89,0.1), 0 24px 40px rgba(0,0,0,0.25);
+      transform: translateY(-4px);
+    }
+
+    /* Ambient glow on hover */
+    .tile::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 20% 80%, rgba(74,124,89,0.08) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+    .tile:hover::before { opacity: 1; }
+
+    .tile-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .tile-index {
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.18em;
+      color: var(--text-tertiary);
+    }
+
+    .tile-arrow {
+      width: 32px;
+      height: 32px;
+      border: 1px solid var(--text-tertiary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: var(--text-tertiary);
+      transition: border-color 0.25s ease, color 0.25s ease, background 0.25s ease;
+      flex-shrink: 0;
+    }
+    .tile:hover .tile-arrow {
+      border-color: var(--green-bright);
+      color: var(--green-bright);
+    }
+
+    .tile-bottom { margin-top: auto; }
+
+    .tile-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(22px, 2.2vw, 32px);
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      color: var(--text-primary);
+      line-height: 1.1;
+      margin-bottom: 10px;
+    }
+
+    .tile-teaser {
+      font-size: 12px;
+      font-weight: 300;
+      line-height: 1.6;
+      color: var(--text-secondary);
+      opacity: 0.4;
+      transition: opacity 0.3s ease;
+      max-width: 340px;
+    }
+    .tile:hover .tile-teaser { opacity: 1; }
+
+    /* ── RESUME TILE — WIDE, HORIZONTAL ─────────────────────────── */
+    .tile-resume {
+      min-height: 100px;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .tile-resume .tile-bottom {
+      margin-top: 0;
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+    .tile-resume .tile-title { margin-bottom: 0; }
+    .resume-meta {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--green-muted);
+    }
+
+    /* ── PHOTOGRAPHY TILE — SUBTLE BG ───────────────────────────── */
+    .tile-photography {
+      background: var(--surface);
+      position: relative;
+    }
+    .tile-photography .photo-bg {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #1a2e1e 0%, #0c0f0c 100%);
+      border-radius: inherit;
+      z-index: 0;
+    }
+    .tile-photography > * { position: relative; z-index: 1; }
+
+    /* ── ANIMATIONS ─────────────────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes expandLine {
+      from { opacity: 0; width: 0; }
+      to   { opacity: 1; width: 48px; }
+    }
+    @keyframes scanLine {
+      0%   { left: -100%; }
+      50%  { left: 100%; }
+      100% { left: 100%; }
+    }
+
+    /* ── FOOTER ─────────────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 48px;
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 14px;
+      color: var(--text-tertiary);
+    }
+    .footer-links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+    }
+    .footer-links a {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      text-decoration: none;
+      transition: color 0.25s ease;
+    }
+    .footer-links a:hover { color: var(--green-bright); }
+
+    /* ── RESPONSIVE ─────────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      nav { padding: 20px 24px; }
+      .nav-links { display: none; }
+
+      .hero {
+        grid-template-columns: 1fr;
+        padding: 100px 24px 64px;
+        min-height: auto;
+        gap: 56px;
+      }
+      .hero-right {
+        height: 420px;
+        order: -1;
+      }
+      .photo-accent { display: none; }
+
+      .grid-section { padding: 0 24px 80px; }
+      .section-divider { padding: 0 24px; }
+
+      .tile-grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto;
+      }
+      .tile-about, .tile-articles, .tile-papers,
+      .tile-thoughts, .tile-photography, .tile-news,
+      .tile-resume {
+        grid-column: auto;
+        grid-row: auto;
+      }
+      .tile-resume {
+        grid-column: 1 / -1;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      footer {
+        padding: 24px;
+        flex-direction: column;
+        gap: 16px;
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 500px) {
+      .tile-grid { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 
 <body>
-  <main class="home-page">
 
-    <section class="landing-panel" aria-label="Introduction">
-      <div class="main-card intro-card">
-        <h1 class="typewriter-title">
-          <span>Hi,</span><br>
-          <span>I’m Prathivee.</span>
+  <!-- ── NAV ── -->
+  <nav>
+    <a class="nav-name" href="/">Prathivee</a>
+    <ul class="nav-links">
+      <li><a href="about.html">About</a></li>
+      <li><a href="articles.html">Writing</a></li>
+      <li><a href="papers.html">Research</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <section style="position:relative; overflow:hidden;">
+
+    <!-- Atmospheric text fragments -->
+    <div class="fragments" aria-hidden="true">
+      <span class="fragment" style="top:12%; left:6%; font-size:clamp(12px,1.3vw,15px);">
+        inflation targeting · macroeconomic stability · RBI policy frameworks
+      </span>
+      <span class="fragment" style="top:30%; left:58%; font-size:clamp(12px,1.3vw,15px);">
+        Singapore–Malaysia trade interdependence · ASEAN integration · GVC structures
+      </span>
+      <span class="fragment" style="top:56%; left:7%; font-size:clamp(12px,1.3vw,15px);">
+        India's export resilience · U.S. tariff shocks · DiD quasi-experimental design
+      </span>
+      <span class="fragment" style="top:76%; left:52%; font-size:clamp(12px,1.3vw,15px);">
+        FASTag adoption · behavioral public policy · digital payment ecosystems
+      </span>
+    </div>
+
+    <div class="hero">
+
+      <!-- LEFT COLUMN -->
+      <div class="hero-left">
+        <p class="hero-label">Portfolio — Prathivee</p>
+
+        <h1 class="hero-name">
+          Hi,<br>I'm <em>Prathivee.</em>
         </h1>
 
-        <p class="intro-subtitle">
+        <div class="hero-divider"></div>
+
+        <p class="hero-tagline">
           I study economies, question systems,<br>
           and write about the forces shaping the world.
         </p>
+
+        <div class="hero-scroll-cue">
+          <div class="scroll-line"></div>
+          <span>Scroll to explore</span>
+        </div>
       </div>
-    </section>
 
-    <section class="menu-panel" aria-label="Portfolio sections">
-      <div class="main-card menu-card-grid">
-
-        <a class="menu-tile tile-about reveal-card" href="about.html">
-          <span class="plus">+</span>
-          <strong>About Me</strong>
-          <span class="arrow">→</span>
-        </a>
-
-        <a class="menu-tile tile-news reveal-card" href="news.html">
-          <span class="plus">+</span>
-          <strong>News</strong>
-          <span class="arrow">→</span>
-        </a>
-
-        <a class="menu-tile tile-resume reveal-card" href="resume.html">
-          <span class="plus">+</span>
-          <strong>Resume</strong>
-          <span class="arrow">→</span>
-        </a>
-
-        <a class="menu-tile tile-thoughts reveal-card" href="thoughts.html">
-          <span class="plus">+</span>
-          <strong>Thoughts</strong>
-          <span class="arrow">→</span>
-        </a>
-
-        <a class="menu-tile tile-articles reveal-card" href="articles.html">
-          <span class="plus">+</span>
-          <strong>Articles</strong>
-          <span class="arrow">→</span>
-        </a>
-
-        <a class="menu-tile tile-photo reveal-card" href="photography.html">
-          <span class="plus">+</span>
-          <strong>Photography</strong>
-          <span class="arrow">→</span>
-        </a>
-
-        <a class="menu-tile tile-contact reveal-card" href="contact.html">
-          <span class="plus">+</span>
-          <strong>Contact</strong>
-          <span class="arrow">→</span>
-        </a>
-
+      <!-- RIGHT COLUMN — photo composition -->
+      <div class="hero-right">
+        <div class="photo-frame"></div>
+        <div class="photo-primary">
+          <img
+            src="prathivee-1.jpg"
+            alt="Prathivee"
+            loading="eager"
+          />
+        </div>
+        <div class="photo-accent">
+          <p class="accent-quote">
+            M.Sc. Economics — Geopolitics & Geoeconomics<br>Gokhale Institute of Politics and Economics, Pune
+          </p>
+          <span class="accent-meta">Economist · Student</span>
+        </div>
       </div>
-    </section>
 
-  </main>
+    </div>
+  </section>
 
-  <script src="js/main.js"></script>
+  <!-- ── GRID SECTION ── -->
+  <div class="section-divider">
+    <span class="divider-label">Explore</span>
+    <div class="divider-line"></div>
+  </div>
+
+  <section class="grid-section">
+    <div class="tile-grid">
+
+      <a class="tile tile-about" href="about.html">
+        <div class="tile-top">
+          <span class="tile-index">01</span>
+          <span class="tile-arrow">↗</span>
+        </div>
+        <div class="tile-bottom">
+          <h2 class="tile-title">About Me</h2>
+          <p class="tile-teaser">Aspiring economist trained in macroeconomics, public finance, trade, and behavioral economics. Based in Pune.</p>
+        </div>
+      </a>
+
+      <a class="tile tile-articles" href="articles.html">
+        <div class="tile-top">
+          <span class="tile-index">02</span>
+          <span class="tile-arrow">↗</span>
+        </div>
+        <div class="tile-bottom">
+          <h2 class="tile-title">Articles</h2>
+          <p class="tile-teaser">Essays on political economy, trade, and the systems quietly running everything.</p>
+        </div>
+      </a>
+
+      <a class="tile tile-papers" href="papers.html">
+        <div class="tile-top">
+          <span class="tile-index">03</span>
+          <span class="tile-arrow">↗</span>
+        </div>
+        <div class="tile-bottom">
+          <h2 class="tile-title">Papers</h2>
+          <p class="tile-teaser">Including co-authored work on inflation targeting and India's macroeconomic stability.</p>
+        </div>
+      </a>
+
+      <a class="tile tile-thoughts" href="thoughts.html">
+        <div class="tile-top">
+          <span class="tile-index">04</span>
+          <span class="tile-arrow">↗</span>
+        </div>
+        <div class="tile-bottom">
+          <h2 class="tile-title">Thoughts</h2>
+          <p class="tile-teaser">Fragments. Reading notes. Things that don't fit neatly anywhere else.</p>
+        </div>
+      </a>
+
+      <a class="tile tile-photography" href="photography.html">
+        <div class="photo-bg"></div>
+        <div class="tile-top">
+          <span class="tile-index">05</span>
+          <span class="tile-arrow">↗</span>
+        </div>
+        <div class="tile-bottom">
+          <h2 class="tile-title">Photography</h2>
+          <p class="tile-teaser">Event and portrait photography from Gokhale Institute — and beyond.</p>
+        </div>
+      </a>
+
+      <a class="tile tile-news" href="news.html">
+        <div class="tile-top">
+          <span class="tile-index">06</span>
+          <span class="tile-arrow">↗</span>
+        </div>
+        <div class="tile-bottom">
+          <h2 class="tile-title">News</h2>
+          <p class="tile-teaser">Updates on current projects, upcoming work, and where I'll be next.</p>
+        </div>
+      </a>
+
+      <a class="tile tile-resume" href="resume.html">
+        <div class="tile-top" style="flex-shrink:0;">
+          <span class="tile-index">07</span>
+        </div>
+        <div class="tile-bottom">
+          <h2 class="tile-title">Résumé</h2>
+          <p class="tile-teaser resume-meta">View full CV →</p>
+        </div>
+        <span class="tile-arrow" style="flex-shrink:0; align-self:center;">↗</span>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    <span class="footer-name">Prathivee &mdash; 2025</span>
+    <ul class="footer-links">
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="resume.html">CV</a></li>
+    </ul>
+  </footer>
+
+  <!-- ── SCRIPT ── -->
+  <script>
+    // Tile reveal on scroll
+    const tiles = document.querySelectorAll('.tile');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          const delay = parseInt(entry.target.dataset.delay || 0);
+          setTimeout(() => entry.target.classList.add('visible'), delay);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    tiles.forEach((tile, i) => {
+      tile.dataset.delay = i * 80;
+      observer.observe(tile);
+    });
+
+    // Subtle parallax on photo
+    const photoPrimary = document.querySelector('.photo-primary img');
+    if (photoPrimary) {
+      window.addEventListener('scroll', () => {
+        const scrolled = window.scrollY;
+        if (scrolled < window.innerHeight) {
+          photoPrimary.style.transform = `translateY(${scrolled * 0.08}px)`;
+        }
+      }, { passive: true });
+    }
+  </script>
+
 </body>
 </html>
