@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — Prathivee</title>
+  <meta name="description" content="About Prathivee Nairy — economist, researcher, and writer based in Pune." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+
+    :root {
+      /* Page palette — light, readable */
+      --bg:           #f5f3ee;
+      --surface:      #eceae4;
+      --text-primary: #1a1f1a;
+      --text-secondary: #4a5240;
+      --text-tertiary:  #8a9180;
+      /* Green accents from homepage */
+      --green-muted:  #4a7c59;
+      --green-bright: #6aad80;
+      --green-dim:    #d4e4da;
+      --border:       rgba(74,124,89,0.15);
+      --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── TOP BAR ── */
+    .topbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      height: 56px;
+      background: rgba(245, 243, 238, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+    }
+    .topbar-back {
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      color: var(--text-secondary);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: color 0.2s ease;
+    }
+    .topbar-back:hover { color: var(--green-muted); }
+    .topbar-back::before { content: '←'; font-size: 14px; }
+
+    .topbar-section {
+      font-size: 11px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+    }
+
+    /* ── LAYOUT ── */
+    .page-layout {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      min-height: 100vh;
+      padding-top: 56px;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      position: sticky;
+      top: 56px;
+      height: calc(100vh - 56px);
+      overflow-y: auto;
+      border-right: 1px solid var(--border);
+      padding: 48px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+
+    .sidebar-group-label {
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: 14px;
+    }
+
+    .sidebar-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .sidebar-links a {
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--text-secondary);
+      text-decoration: none;
+      padding-left: 12px;
+      border-left: 2px solid transparent;
+      transition: color 0.2s ease, border-color 0.2s ease;
+      display: block;
+    }
+    .sidebar-links a:hover,
+    .sidebar-links a.active {
+      color: var(--green-muted);
+      border-left-color: var(--green-muted);
+    }
+
+    .sidebar-contact {
+      margin-top: auto;
+    }
+    .sidebar-contact a {
+      font-size: 12px;
+      color: var(--green-muted);
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      transition: opacity 0.2s ease;
+    }
+    .sidebar-contact a:hover { opacity: 0.7; }
+
+    /* ── MAIN CONTENT ── */
+    .main-content {
+      padding: 64px 80px 120px;
+      max-width: 820px;
+    }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      margin-bottom: 64px;
+      opacity: 0;
+      animation: fadeUp 0.7s var(--ease) 0.1s forwards;
+    }
+    .page-header-label {
+      font-size: 11px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--green-muted);
+      margin-bottom: 16px;
+    }
+    .page-header h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(40px, 5vw, 64px);
+      font-weight: 300;
+      line-height: 1.0;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+    .page-header h1 em {
+      font-style: italic;
+      color: var(--green-muted);
+    }
+
+    /* ── ABOUT INTRO ROW ── */
+    .about-intro {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 48px;
+      margin-bottom: 72px;
+      opacity: 0;
+      animation: fadeUp 0.7s var(--ease) 0.25s forwards;
+    }
+
+    .about-photo {
+      position: relative;
+    }
+    .about-photo img {
+      width: 100%;
+      aspect-ratio: 3/4;
+      object-fit: cover;
+      object-position: center top;
+      border-radius: 4px 4px 48px 4px;
+      filter: grayscale(10%);
+      display: block;
+    }
+    .about-photo::after {
+      content: '';
+      position: absolute;
+      top: 10px; left: 10px; right: -10px; bottom: -10px;
+      border: 1px solid var(--green-dim);
+      border-radius: 4px 4px 48px 4px;
+      z-index: -1;
+    }
+
+    .about-quick {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 24px;
+    }
+
+    .quick-fact {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 16px;
+    }
+    .quick-fact:last-child { border-bottom: none; padding-bottom: 0; }
+    .quick-fact-label {
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: 6px;
+    }
+    .quick-fact-value {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--text-primary);
+      line-height: 1.5;
+    }
+    .quick-fact-value a {
+      color: var(--green-muted);
+      text-decoration: none;
+    }
+    .quick-fact-value a:hover { text-decoration: underline; }
+
+    /* ── BIO SECTIONS ── */
+    .bio-section {
+      margin-bottom: 56px;
+      opacity: 0;
+      animation: fadeUp 0.7s var(--ease) 0.4s forwards;
+    }
+    .bio-section + .bio-section {
+      animation-delay: 0.55s;
+    }
+    .bio-section:nth-child(4) { animation-delay: 0.7s; }
+
+    .bio-section-label {
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .bio-section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .bio-text {
+      font-size: 16px;
+      font-weight: 300;
+      line-height: 1.85;
+      color: var(--text-secondary);
+    }
+    .bio-text p + p { margin-top: 20px; }
+    .bio-text strong {
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    /* ── SKILLS GRID ── */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 8px;
+    }
+    .skill-tag {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 18px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+    .skill-tag strong {
+      display: block;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--green-muted);
+      margin-bottom: 4px;
+      font-weight: 500;
+    }
+
+    /* ── TIMELINE (Education / Experience) ── */
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin-top: 8px;
+    }
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 100px 1fr;
+      gap: 24px;
+      padding-bottom: 32px;
+      position: relative;
+    }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: 96px;
+      top: 6px;
+      bottom: 0;
+      width: 1px;
+      background: var(--border);
+    }
+    .timeline-item:last-child::before { display: none; }
+
+    .timeline-date {
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      color: var(--text-tertiary);
+      padding-top: 4px;
+      text-align: right;
+    }
+    .timeline-body { padding-left: 24px; position: relative; }
+    .timeline-body::before {
+      content: '';
+      position: absolute;
+      left: -4px; top: 6px;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--green-muted);
+      border: 2px solid var(--bg);
+    }
+
+    .timeline-title {
+      font-size: 15px;
+      font-weight: 400;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+    .timeline-subtitle {
+      font-size: 13px;
+      color: var(--green-muted);
+      margin-bottom: 8px;
+    }
+    .timeline-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .page-layout { grid-template-columns: 1fr; }
+      .sidebar {
+        position: static;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        padding: 24px;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 16px;
+      }
+      .sidebar-contact { margin-top: 0; }
+      .main-content { padding: 40px 24px 80px; }
+      .about-intro { grid-template-columns: 1fr; }
+      .about-photo { max-width: 200px; }
+      .skills-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP BAR -->
+  <nav class="topbar">
+    <a class="topbar-back" href="index.html">Prathivee</a>
+    <span class="topbar-section">About</span>
+  </nav>
+
+  <div class="page-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div>
+        <p class="sidebar-group-label">On this page</p>
+        <ul class="sidebar-links">
+          <li><a href="#intro" class="active">Introduction</a></li>
+          <li><a href="#research">Research Interests</a></li>
+          <li><a href="#experience">Experience</a></li>
+          <li><a href="#education">Education</a></li>
+          <li><a href="#skills">Skills</a></li>
+          <li><a href="#volunteer">Volunteering</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="sidebar-group-label">Explore</p>
+        <ul class="sidebar-links">
+          <li><a href="articles.html">Articles</a></li>
+          <li><a href="thoughts.html">Thoughts</a></li>
+          <li><a href="photography.html">Photography</a></li>
+          <li><a href="resume.html">Résumé</a></li>
+        </ul>
+      </div>
+      <div class="sidebar-contact">
+        <p class="sidebar-group-label">Contact</p>
+        <a href="https://www.linkedin.com/in/prathivee/" target="_blank" rel="noopener">LinkedIn →</a>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main-content">
+
+      <!-- HEADER -->
+      <header class="page-header" id="intro">
+        <p class="page-header-label">About Me</p>
+        <h1>Prathivee <em>Nairy.</em></h1>
+      </header>
+
+      <!-- PHOTO + QUICK FACTS -->
+      <div class="about-intro">
+        <div class="about-photo">
+          <img src="prathivee-1.jpg" alt="Prathivee Nairy" />
+        </div>
+        <div class="about-quick">
+          <div class="quick-fact">
+            <p class="quick-fact-label">Currently</p>
+            <p class="quick-fact-value">M.Sc. Economics — Geopolitics & Geoeconomics<br>Gokhale Institute of Politics and Economics, Pune</p>
+          </div>
+          <div class="quick-fact">
+            <p class="quick-fact-label">Background</p>
+            <p class="quick-fact-value">B.Sc. Economics, 8.21 CGPA (High First Class)</p>
+          </div>
+          <div class="quick-fact">
+            <p class="quick-fact-label">Based in</p>
+            <p class="quick-fact-value">Pune, India</p>
+          </div>
+          <div class="quick-fact">
+            <p class="quick-fact-label">Contact</p>
+            <p class="quick-fact-value"><a href="https://www.linkedin.com/in/prathivee/" target="_blank" rel="noopener">LinkedIn</a></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- BIO -->
+      <section class="bio-section">
+        <p class="bio-section-label">Introduction</p>
+        <div class="bio-text">
+          <p>
+            I am an economist in the making — trained in macroeconomics, public finance, 
+            international trade, and behavioral economics. I study how systems are built, 
+            how they hold together, and how they fracture. My work sits at the intersection 
+            of data, policy, and the political forces that shape both.
+          </p>
+          <p>
+            I am currently pursuing my M.Sc. in Economics with a specialisation in 
+            <strong>Geopolitics and Geoeconomics</strong> at the Gokhale Institute of 
+            Politics and Economics, Pune — one of India's oldest and most respected 
+            institutions for economics research. My first semester SGPA was 9.00.
+          </p>
+          <p>
+            Outside the classroom, I write — about trade, about systems, about the things 
+            that don't fit neatly into a regression table. I also photograph, volunteer, 
+            and occasionally cook with far too much garlic.
+          </p>
+        </div>
+      </section>
+
+      <!-- RESEARCH INTERESTS -->
+      <section class="bio-section" id="research">
+        <p class="bio-section-label">Research Interests</p>
+        <div class="bio-text">
+          <p>
+            My research spans several areas, connected by a common thread: 
+            <strong>how economic decisions are shaped by politics, power, and behavior</strong> 
+            — and what that means for people and institutions.
+          </p>
+        </div>
+        <div class="skills-grid" style="margin-top: 24px;">
+          <div class="skill-tag"><strong>International Trade</strong>Singapore–Malaysia trade interdependence, ASEAN integration, GVC structures, tariff shocks</div>
+          <div class="skill-tag"><strong>Monetary Policy</strong>Inflation targeting, RBI policy frameworks, fiscal-monetary interactions</div>
+          <div class="skill-tag"><strong>Behavioral Public Policy</strong>FASTag adoption in India, digital payment ecosystems, loss aversion in firms</div>
+          <div class="skill-tag"><strong>Indian Public Finance</strong>Tax equity, FRBM Act, GST reform, tax buoyancy analysis</div>
+          <div class="skill-tag"><strong>Environmental & Regulatory</strong>Nuclear waste liability, global arbitration, UN-backed funding models</div>
+          <div class="skill-tag"><strong>Microeconomics</strong>Export resilience, DiD quasi-experimental design, firm entry and exit</div>
+        </div>
+      </section>
+
+      <!-- EXPERIENCE -->
+      <section class="bio-section" id="experience">
+        <p class="bio-section-label">Experience</p>
+        <div class="timeline">
+          <div class="timeline-item">
+            <span class="timeline-date">2023–2024</span>
+            <div class="timeline-body">
+              <p class="timeline-title">Communications Intern</p>
+              <p class="timeline-subtitle">Gokhale Institute of Politics and Economics, Pune</p>
+              <p class="timeline-desc">Coordinated and covered institute events. Managed social media engagement. Provided professional photography and videography for seminars and conferences.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <span class="timeline-date">2024</span>
+            <div class="timeline-body">
+              <p class="timeline-title">Summer Research Intern</p>
+              <p class="timeline-subtitle">Gokhale Institute of Politics and Economics, Pune</p>
+              <p class="timeline-desc">Co-authored the paper <em>"Impact of Inflation Targeting on India's Macroeconomic Stability."</em> Conducted data and econometric analysis on India's Inflation Targeting Framework.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- EDUCATION -->
+      <section class="bio-section" id="education">
+        <p class="bio-section-label">Education</p>
+        <div class="timeline">
+          <div class="timeline-item">
+            <span class="timeline-date">2025–2027</span>
+            <div class="timeline-body">
+              <p class="timeline-title">M.Sc. Economics — Geopolitics & Geoeconomics</p>
+              <p class="timeline-subtitle">Gokhale Institute of Politics and Economics, Pune</p>
+              <p class="timeline-desc">Sem 1 SGPA: 9.00. Expected graduation 2027.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <span class="timeline-date">2022–2025</span>
+            <div class="timeline-body">
+              <p class="timeline-title">B.Sc. Economics</p>
+              <p class="timeline-subtitle">Gokhale Institute of Politics and Economics, Pune</p>
+              <p class="timeline-desc">Graduated with 8.21 CGPA — High First Class.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <span class="timeline-date">–2022</span>
+            <div class="timeline-body">
+              <p class="timeline-title">High School</p>
+              <p class="timeline-subtitle">Army Public School, Kolkata</p>
+              <p class="timeline-desc">CBSE 10th: 91% (2020) · CBSE 12th: 90% (2022)</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SKILLS -->
+      <section class="bio-section" id="skills">
+        <p class="bio-section-label">Skills & Tools</p>
+        <div class="skills-grid">
+          <div class="skill-tag"><strong>Languages & Tools</strong>Python (pandas, matplotlib), R, SQL, MS Excel, PowerPoint</div>
+          <div class="skill-tag"><strong>Quantitative Methods</strong>Regression analysis, forecasting, hypothesis testing, DiD design</div>
+          <div class="skill-tag"><strong>Data Work</strong>WITS, World Bank databases, cross-sectional & time series datasets</div>
+          <div class="skill-tag"><strong>Writing & Communication</strong>Academic writing, policy reporting, presentation design, co-authored papers</div>
+        </div>
+      </section>
+
+      <!-- VOLUNTEER -->
+      <section class="bio-section" id="volunteer">
+        <p class="bio-section-label">Volunteering</p>
+        <div class="timeline">
+          <div class="timeline-item">
+            <span class="timeline-date">2025–26</span>
+            <div class="timeline-body">
+              <p class="timeline-title">Fellow — Make A Difference</p>
+              <p class="timeline-subtitle">Teaching Science, Grades 8–10</p>
+              <p class="timeline-desc">Teaching science at a shelter home, contributing to students' academic growth.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <span class="timeline-date">2024–25</span>
+            <div class="timeline-body">
+              <p class="timeline-title">Academic Support — Make A Difference</p>
+              <p class="timeline-subtitle">Teaching Mathematics, Grade 10</p>
+              <p class="timeline-desc">Teaching 10th-grade mathematics at a school.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <span class="timeline-date">Prior</span>
+            <div class="timeline-body">
+              <p class="timeline-title">SEWA International</p>
+              <p class="timeline-subtitle">Survey & Assessment Volunteer</p>
+              <p class="timeline-desc">Conducted surveys to assess cognitive development of pre-primary children. Evaluated impact of a developmental kit provided by the organisation.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script>
+    // Sidebar active link on scroll
+    const sections = document.querySelectorAll('[id]');
+    const links = document.querySelectorAll('.sidebar-links a');
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(s => {
+        if (window.scrollY >= s.offsetTop - 80) current = s.id;
+      });
+      links.forEach(a => {
+        a.classList.remove('active');
+        if (a.getAttribute('href') === '#' + current) a.classList.add('active');
+      });
+    }, { passive: true });
+  </script>
+
+</body>
+</html>
