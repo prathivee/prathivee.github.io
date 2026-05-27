@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Photography — Prathivee</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      font-size: 16px;
+      scroll-behavior: smooth;
+    }
+
+    :root {
+      --bg: #f5f3ee;
+      --surface: #eceae4;
+      --surface-deep: #dedbd2;
+      --text-primary: #1a1f1a;
+      --text-secondary: #4a5240;
+      --text-tertiary: #8a9180;
+      --green-muted: #4a7c59;
+      --green-bright: #6aad80;
+      --green-dim: #d4e4da;
+      --border: rgba(74,124,89,0.16);
+      --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+    }
+
+    /* TOPBAR */
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      height: 56px;
+      background: rgba(245,243,238,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+    }
+
+    .topbar-back {
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      color: var(--text-secondary);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: color 0.2s ease;
+    }
+
+    .topbar-back:hover {
+      color: var(--green-muted);
+    }
+
+    .topbar-back::before {
+      content: '←';
+      font-size: 14px;
+    }
+
+    .topbar-section {
+      font-size: 11px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+    }
+
+    /* LAYOUT */
+    .page-layout {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      min-height: 100vh;
+      padding-top: 56px;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      position: sticky;
+      top: 56px;
+      height: calc(100vh - 56px);
+      overflow-y: auto;
+      border-right: 1px solid var(--border);
+      padding: 48px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+
+    .sidebar-group-label {
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: 14px;
+    }
+
+    .sidebar-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .sidebar-links a {
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--text-secondary);
+      text-decoration: none;
+      padding-left: 12px;
+      border-left: 2px solid transparent;
+      transition: color 0.2s ease, border-color 0.2s ease;
+      display: block;
+    }
+
+    .sidebar-links a:hover,
+    .sidebar-links a.active {
+      color: var(--green-muted);
+      border-left-color: var(--green-muted);
+    }
+
+    .sidebar-contact {
+      margin-top: auto;
+    }
+
+    .sidebar-contact a {
+      font-size: 12px;
+      color: var(--green-muted);
+      text-decoration: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .sidebar-contact a:hover {
+      opacity: 0.7;
+    }
+
+    /* MAIN */
+    .main-content {
+      padding: 64px 80px 120px;
+      max-width: 1120px;
+    }
+
+    .page-header {
+      margin-bottom: 56px;
+      opacity: 0;
+      animation: fadeUp 0.7s var(--ease) 0.1s forwards;
+    }
+
+    .page-header-label {
+      font-size: 11px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--green-muted);
+      margin-bottom: 16px;
+    }
+
+    .page-header h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(44px, 6vw, 78px);
+      font-weight: 300;
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+    }
+
+    .page-header h1 em {
+      font-style: italic;
+      color: var(--green-muted);
+    }
+
+    .page-intro {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-top: 22px;
+      max-width: 620px;
+    }
+
+    /* GALLERY */
+    .photo-gallery {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .photo-card {
+      grid-column: span 4;
+      height: 360px;
+      position: relative;
+      overflow: hidden;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      background: var(--surface);
+      opacity: 0;
+      transform: translateY(24px);
+      transition:
+        opacity 0.7s var(--ease),
+        transform 0.7s var(--ease),
+        grid-column 0.4s var(--ease),
+        border-color 0.3s ease,
+        box-shadow 0.3s ease;
+    }
+
+    .photo-card.large {
+      grid-column: span 8;
+    }
+
+    .photo-card.tall {
+      height: 460px;
+    }
+
+    .photo-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .photo-card:hover {
+      grid-column: span 5;
+      border-color: rgba(74,124,89,0.38);
+      box-shadow: 0 28px 70px rgba(29,38,25,0.16);
+      z-index: 3;
+    }
+
+    .photo-card.large:hover {
+      grid-column: span 9;
+    }
+
+    .photo-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scale(1);
+      filter: saturate(0.94) contrast(1.02);
+      transition:
+        transform 0.65s var(--ease),
+        filter 0.45s ease;
+    }
+
+    .photo-card:hover img {
+      transform: scale(1.08);
+      filter: saturate(1.04) contrast(1.05);
+    }
+
+    .photo-overlay {
+      position: absolute;
+      inset: 0;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      background:
+        linear-gradient(to top, rgba(10,14,10,0.72), rgba(10,14,10,0.08) 58%, transparent);
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+
+    .photo-card:hover .photo-overlay {
+      opacity: 1;
+    }
+
+    .photo-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(27px, 3vw, 42px);
+      font-weight: 300;
+      line-height: 1;
+      color: #f5f3ee;
+      letter-spacing: -0.02em;
+      transform: translateY(12px);
+      transition: transform 0.35s var(--ease);
+    }
+
+    .photo-card:hover .photo-title {
+      transform: translateY(0);
+    }
+
+    .photo-meta {
+      margin-top: 10px;
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(245,243,238,0.68);
+    }
+
+    /* DESCRIPTION PANEL */
+    .photo-description-panel {
+      display: none;
+      margin-top: 34px;
+      padding: 44px 52px;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background:
+        linear-gradient(135deg, rgba(236,234,228,0.95), rgba(245,243,238,0.98));
+      animation: fadeUp 0.42s var(--ease) forwards;
+      max-width: 820px;
+    }
+
+    .photo-description-panel.open {
+      display: block;
+    }
+
+    .description-close {
+      float: right;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-tertiary);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .description-close:hover {
+      color: var(--green-muted);
+      border-color: var(--green-muted);
+    }
+
+    .description-category {
+      display: inline-block;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--green-muted);
+      background: var(--green-dim);
+      padding: 4px 11px;
+      border-radius: 20px;
+      margin-bottom: 18px;
+    }
+
+    .description-title {
+      clear: both;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(30px, 4vw, 48px);
+      font-weight: 300;
+      line-height: 1;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+    }
+
+    .description-meta {
+      font-size: 12px;
+      color: var(--text-tertiary);
+      margin-bottom: 28px;
+    }
+
+    .description-body p {
+      font-size: 15px;
+      line-height: 1.85;
+      color: var(--text-secondary);
+      margin-bottom: 18px;
+    }
+
+    .description-body strong {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 1000px) {
+      .photo-card,
+      .photo-card.large,
+      .photo-card:hover,
+      .photo-card.large:hover {
+        grid-column: span 6;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .topbar {
+        padding: 0 24px;
+      }
+
+      .page-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: relative;
+        top: 0;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        padding: 32px 24px;
+      }
+
+      .main-content {
+        padding: 48px 24px 90px;
+      }
+
+      .photo-card,
+      .photo-card.large,
+      .photo-card:hover,
+      .photo-card.large:hover {
+        grid-column: span 12;
+      }
+
+      .photo-card,
+      .photo-card.tall {
+        height: 380px;
+      }
+
+      .photo-description-panel {
+        padding: 34px 26px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .topbar-section {
+        display: none;
+      }
+
+      .photo-card,
+      .photo-card.tall {
+        height: 310px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="topbar">
+    <a href="/" class="topbar-back">Prathivee</a>
+    <div class="topbar-section">Photography</div>
+  </header>
+
+  <div class="page-layout">
+
+    <aside class="sidebar">
+      <div>
+        <div class="sidebar-group-label">Gallery</div>
+        <ul class="sidebar-links">
+          <li><a href="#all" class="active">All Photographs</a></li>
+          <li><a href="#places">Places</a></li>
+          <li><a href="#people">People</a></li>
+          <li><a href="#events">Events</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="sidebar-group-label">Explore</div>
+        <ul class="sidebar-links">
+          <li><a href="about">About</a></li>
+          <li><a href="articles">Articles</a></li>
+          <li><a href="thoughts">Thoughts</a></li>
+          <li><a href="news">News</a></li>
+          <li><a href="resume">Résumé</a></li>
+        </ul>
+      </div>
+
+      <div class="sidebar-contact">
+        <div class="sidebar-group-label">Contact</div>
+        <a href="contact">LinkedIn →</a>
+      </div>
+    </aside>
+
+    <main class="main-content" id="all">
+
+      <header class="page-header">
+        <div class="page-header-label">Visual Archive</div>
+        <h1>Photography & <em>visual notes</em></h1>
+        <p class="page-intro">
+          A selected archive of photographs, moments, places, textures, people,
+          and visual fragments. Hover over a photograph to reveal its title.
+          Click to read the note behind it.
+        </p>
+      </header>
+
+      <section class="photo-gallery">
+
+        <!-- PHOTO 01 -->
+        <article class="photo-card large" data-description="photo-1" id="places">
+          <img src="images/photography/photo-001.jpg" alt="Garlic at Mahatma Phule Mandai" />
+
+          <div class="photo-overlay">
+            <h2 class="photo-title">The little backbone of many cuisines</h2>
+            <div class="photo-meta">Mahatma Phule Mandai · Pune</div>
+          </div>
+        </article>
+
+        <!-- PHOTO 02 -->
+        <article class="photo-card tall" data-description="photo-2" id="people">
+          <img src="images/photography/photo-002.jpg" alt="Portrait photograph" />
+
+          <div class="photo-overlay">
+            <h2 class="photo-title">Portrait Study</h2>
+            <div class="photo-meta">People · Portrait</div>
+          </div>
+        </article>
+
+        <!-- PHOTO 03 -->
+        <article class="photo-card" data-description="photo-3" id="events">
+          <img src="images/photography/photo-003.jpg" alt="Event photograph" />
+
+          <div class="photo-overlay">
+            <h2 class="photo-title">Event Light</h2>
+            <div class="photo-meta">Event · Documentation</div>
+          </div>
+        </article>
+
+        <!-- PHOTO 04 -->
+        <article class="photo-card" data-description="photo-4">
+          <img src="images/photography/photo-004.jpg" alt="Street photograph" />
+
+          <div class="photo-overlay">
+            <h2 class="photo-title">Street Fragment</h2>
+            <div class="photo-meta">Street · Observation</div>
+          </div>
+        </article>
+
+      </section>
+
+      <!-- DESCRIPTION PANEL -->
+      <section class="photo-description-panel" id="photoDescriptionPanel">
+        <button class="description-close" id="closeDescription">Close ✕</button>
+
+        <span class="description-category" id="descriptionCategory">Category</span>
+        <h2 class="description-title" id="descriptionTitle">Photo Title</h2>
+        <div class="description-meta" id="descriptionMeta">Meta</div>
+
+        <div class="description-body" id="descriptionBody">
+          <p>Description will appear here.</p>
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <script>
+    const photoCards = document.querySelectorAll('.photo-card');
+    const panel = document.getElementById('photoDescriptionPanel');
+
+    const descriptionCategory = document.getElementById('descriptionCategory');
+    const descriptionTitle = document.getElementById('descriptionTitle');
+    const descriptionMeta = document.getElementById('descriptionMeta');
+    const descriptionBody = document.getElementById('descriptionBody');
+    const closeDescription = document.getElementById('closeDescription');
+
+    const photoDescriptions = {
+      "photo-1": {
+        category: "Places",
+        title: "The little backbone of many cuisines",
+        meta: "Mahatma Phule Mandai, Pune",
+        body: `
+          <p>
+            Garlic is easy to miss because it is everywhere. It sits quietly in baskets,
+            kitchens, markets, and recipes, but it carries an enormous amount of flavour,
+            memory, and labour.
+          </p>
+
+          <p>
+            This photograph was taken at Mahatma Phule Mandai in Pune. I liked how something
+            so ordinary could still feel sculptural when seen closely.
+          </p>
+        `
+      },
+
+      "photo-2": {
+        category: "People",
+        title: "Portrait Study",
+        meta: "Portrait · Replace with your real date/location",
+        body: `
+          <p>
+            Add your description here. You can write about the person, the mood,
+            the setting, the lighting, or the reason you selected this photograph.
+          </p>
+        `
+      },
+
+      "photo-3": {
+        category: "Events",
+        title: "Event Light",
+        meta: "Event · Replace with your real date/location",
+        body: `
+          <p>
+            Add your event description here. You can mention the event, the atmosphere,
+            your role as photographer, or the moment captured.
+          </p>
+        `
+      },
+
+      "photo-4": {
+        category: "Street",
+        title: "Street Fragment",
+        meta: "Street · Replace with your real date/location",
+        body: `
+          <p>
+            Add your description here. This can be short, poetic, documentary, or reflective.
+          </p>
+        `
+      }
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          const delay = parseInt(entry.target.dataset.delay || 0);
+          setTimeout(() => entry.target.classList.add('visible'), delay);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    photoCards.forEach((card, i) => {
+      card.dataset.delay = i * 90;
+      observer.observe(card);
+    });
+
+    photoCards.forEach(card => {
+      card.addEventListener('click', () => {
+        const descriptionId = card.dataset.description;
+        const data = photoDescriptions[descriptionId];
+
+        if (!data) return;
+
+        descriptionCategory.textContent = data.category;
+        descriptionTitle.textContent = data.title;
+        descriptionMeta.textContent = data.meta;
+        descriptionBody.innerHTML = data.body;
+
+        panel.classList.add('open');
+
+        setTimeout(() => {
+          panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 120);
+      });
+    });
+
+    closeDescription.addEventListener('click', () => {
+      panel.classList.remove('open');
+    });
+  </script>
+
+</body>
+</html>
