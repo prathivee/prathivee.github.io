@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>News — Prathivee</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { font-size: 16px; scroll-behavior: smooth; }
+
+    :root {
+      --bg: #f5f3ee;
+      --surface: #eceae4;
+      --text-primary: #1a1f1a;
+      --text-secondary: #4a5240;
+      --text-tertiary: #8a9180;
+      --green-muted: #4a7c59;
+      --green-bright: #6aad80;
+      --green-dim: #d4e4da;
+      --border: rgba(74,124,89,0.15);
+      --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* TOPBAR */
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      height: 56px;
+      background: rgba(245,243,238,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+    }
+
+    .topbar-back {
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      color: var(--text-secondary);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: color 0.2s ease;
+    }
+
+    .topbar-back:hover { color: var(--green-muted); }
+
+    .topbar-back::before {
+      content: '←';
+      font-size: 14px;
+    }
+
+    .topbar-section {
+      font-size: 11px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+    }
+
+    /* LAYOUT */
+    .page-layout {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      min-height: 100vh;
+      padding-top: 56px;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      position: sticky;
+      top: 56px;
+      height: calc(100vh - 56px);
+      overflow-y: auto;
+      border-right: 1px solid var(--border);
+      padding: 48px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+
+    .sidebar-group-label {
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: 14px;
+    }
+
+    .sidebar-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .sidebar-links a {
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--text-secondary);
+      text-decoration: none;
+      padding-left: 12px;
+      border-left: 2px solid transparent;
+      transition: color 0.2s ease, border-color 0.2s ease;
+      display: block;
+    }
+
+    .sidebar-links a:hover,
+    .sidebar-links a.active {
+      color: var(--green-muted);
+      border-left-color: var(--green-muted);
+    }
+
+    .sidebar-contact {
+      margin-top: auto;
+    }
+
+    .sidebar-contact a {
+      font-size: 12px;
+      color: var(--green-muted);
+      text-decoration: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .sidebar-contact a:hover { opacity: 0.7; }
+
+    /* MAIN */
+    .main-content {
+      padding: 64px 80px 120px;
+      max-width: 860px;
+    }
+
+    /* HEADER */
+    .page-header {
+      margin-bottom: 56px;
+      opacity: 0;
+      animation: fadeUp 0.7s var(--ease) 0.1s forwards;
+    }
+
+    .page-header-label {
+      font-size: 11px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--green-muted);
+      margin-bottom: 16px;
+    }
+
+    .page-header h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(40px, 5vw, 64px);
+      font-weight: 300;
+      line-height: 1.0;
+      letter-spacing: -0.02em;
+    }
+
+    .page-header h1 em {
+      font-style: italic;
+      color: var(--green-muted);
+    }
+
+    .page-intro {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-top: 20px;
+      max-width: 540px;
+    }
+
+    /* NEWS CARDS — same structure as articles page */
+    .news-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .news-card {
+      border-top: 1px solid var(--border);
+      padding: 32px 0;
+      display: grid;
+      grid-template-columns: 80px 1fr auto;
+      gap: 32px;
+      align-items: start;
+      text-decoration: none;
+      color: inherit;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: background 0.25s ease;
+      cursor: pointer;
+    }
+
+    .news-card:last-child {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .news-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+      transition:
+        opacity 0.6s var(--ease),
+        transform 0.6s var(--ease),
+        background 0.25s ease;
+    }
+
+    .news-card:hover {
+      background: var(--surface);
+      margin: 0 -24px;
+      padding-left: 24px;
+      padding-right: 24px;
+      border-radius: 8px;
+      border-top-color: transparent;
+    }
+
+    .news-card:hover + .news-card {
+      border-top-color: transparent;
+    }
+
+    .news-number {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      color: var(--text-tertiary);
+      padding-top: 6px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .news-tag {
+      display: inline-block;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--green-muted);
+      background: var(--green-dim);
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+    }
+
+    .news-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(20px, 2.2vw, 27px);
+      font-weight: 400;
+      line-height: 1.2;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+      letter-spacing: -0.01em;
+    }
+
+    .news-excerpt {
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      max-width: 500px;
+      opacity: 0.7;
+      transition: opacity 0.25s ease;
+    }
+
+    .news-card:hover .news-excerpt {
+      opacity: 1;
+    }
+
+    .news-meta {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      margin-top: 14px;
+      letter-spacing: 0.04em;
+    }
+
+    .news-arrow {
+      font-size: 18px;
+      color: var(--text-tertiary);
+      padding-top: 6px;
+      transition: color 0.25s ease, transform 0.25s ease;
+    }
+
+    .news-card:hover .news-arrow {
+      color: var(--green-muted);
+      transform: translate(3px, -3px);
+    }
+
+    /* NEWS READER */
+    .news-reader {
+      display: none;
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 48px 56px;
+      margin: 8px 0 32px;
+      border: 1px solid var(--border);
+      animation: fadeUp 0.4s var(--ease) forwards;
+    }
+
+    .news-reader.open {
+      display: block;
+    }
+
+    .reader-close {
+      float: right;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      cursor: pointer;
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: 20px;
+      background: none;
+      transition: color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .reader-close:hover {
+      color: var(--green-muted);
+      border-color: var(--green-muted);
+    }
+
+    .reader-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(26px, 3vw, 36px);
+      font-weight: 400;
+      line-height: 1.15;
+      margin: 24px 0 8px;
+      letter-spacing: -0.01em;
+    }
+
+    .reader-meta {
+      font-size: 12px;
+      color: var(--text-tertiary);
+      margin-bottom: 28px;
+    }
+
+    .reader-body {
+      clear: both;
+      padding-top: 8px;
+    }
+
+    .reader-body p {
+      font-size: 15px;
+      line-height: 1.85;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+
+    .reader-body strong {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 900px) {
+      .topbar {
+        padding: 0 24px;
+      }
+
+      .page-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: relative;
+        top: 0;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        padding: 32px 24px;
+      }
+
+      .main-content {
+        padding: 48px 24px 90px;
+      }
+
+      .news-card {
+        grid-template-columns: 48px 1fr auto;
+        gap: 18px;
+      }
+
+      .news-reader {
+        padding: 32px 24px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .topbar-section {
+        display: none;
+      }
+
+      .news-card {
+        grid-template-columns: 1fr auto;
+      }
+
+      .news-number {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="topbar">
+    <a href="/" class="topbar-back">Prathivee</a>
+    <div class="topbar-section">News</div>
+  </header>
+
+  <div class="page-layout">
+
+    <aside class="sidebar">
+      <div>
+        <div class="sidebar-group-label">Filter</div>
+        <ul class="sidebar-links">
+          <li><a href="#all" class="active">All News</a></li>
+          <li><a href="#research">Research</a></li>
+          <li><a href="#website">Website</a></li>
+          <li><a href="#updates">Updates</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="sidebar-group-label">Explore</div>
+        <ul class="sidebar-links">
+          <li><a href="about">About</a></li>
+          <li><a href="articles">Articles</a></li>
+          <li><a href="thoughts">Thoughts</a></li>
+          <li><a href="photography">Photography</a></li>
+          <li><a href="resume">Résumé</a></li>
+        </ul>
+      </div>
+
+      <div class="sidebar-contact">
+        <div class="sidebar-group-label">Contact</div>
+        <a href="contact">LinkedIn →</a>
+      </div>
+    </aside>
+
+    <main class="main-content" id="all">
+
+      <header class="page-header">
+        <div class="page-header-label">Updates</div>
+        <h1>News & <em>Updates</em></h1>
+        <p class="page-intro">
+          A small archive of current projects, academic updates, website changes,
+          research progress, and other things worth recording.
+        </p>
+      </header>
+
+      <section class="news-list">
+
+        <!-- NEWS 01 -->
+        <article class="news-card" data-reader="news-1" id="website">
+          <div class="news-number">01</div>
+
+          <div class="news-body">
+            <span class="news-tag">Website</span>
+            <h2 class="news-title">Portfolio website is now live</h2>
+            <p class="news-excerpt">
+              The first version of this personal archive is now live, bringing together writing, research, photography, résumé, and contact details.
+            </p>
+            <div class="news-meta">2026 · Website Update</div>
+          </div>
+
+          <div class="news-arrow">↗</div>
+        </article>
+
+        <div class="news-reader" id="news-1">
+          <button class="reader-close">Close ✕</button>
+          <span class="news-tag">Website</span>
+          <h2 class="reader-title">Portfolio website is now live</h2>
+          <div class="reader-meta">2026 · Website Update</div>
+
+          <div class="reader-body">
+            <p>
+              This website is being built as a central archive for my academic, creative, and professional work.
+              The goal is to keep everything in one place: articles, research work, photography, résumé, and updates.
+            </p>
+
+            <p>
+              The current version is still being refined section by section. Some pages may begin as placeholders,
+              but the structure is now in place for a more complete personal portfolio.
+            </p>
+          </div>
+        </div>
+
+        <!-- NEWS 02 -->
+        <article class="news-card" data-reader="news-2" id="research">
+          <div class="news-number">02</div>
+
+          <div class="news-body">
+            <span class="news-tag">Research</span>
+            <h2 class="news-title">Research and writing archive is being organised</h2>
+            <p class="news-excerpt">
+              Articles, essays, and research-related material are being arranged into a cleaner archive for easier reading and navigation.
+            </p>
+            <div class="news-meta">2026 · Research Update</div>
+          </div>
+
+          <div class="news-arrow">↗</div>
+        </article>
+
+        <div class="news-reader" id="news-2">
+          <button class="reader-close">Close ✕</button>
+          <span class="news-tag">Research</span>
+          <h2 class="reader-title">Research and writing archive is being organised</h2>
+          <div class="reader-meta">2026 · Research Update</div>
+
+          <div class="reader-body">
+            <p>
+              The writing archive is being structured to include essays on political economy, international trade,
+              geoeconomics, public policy, and related themes.
+            </p>
+
+            <p>
+              The aim is not only to display finished work, but also to create a readable record of research interests,
+              evolving questions, and academic direction.
+            </p>
+          </div>
+        </div>
+
+        <!-- NEWS 03 -->
+        <article class="news-card" data-reader="news-3" id="updates">
+          <div class="news-number">03</div>
+
+          <div class="news-body">
+            <span class="news-tag">Update</span>
+            <h2 class="news-title">Photography and thoughts sections are under construction</h2>
+            <p class="news-excerpt">
+              The photography and thoughts pages will be used for visual work, short reflective pieces, fragments, and informal writing.
+            </p>
+            <div class="news-meta">2026 · Portfolio Update</div>
+          </div>
+
+          <div class="news-arrow">↗</div>
+        </article>
+
+        <div class="news-reader" id="news-3">
+          <button class="reader-close">Close ✕</button>
+          <span class="news-tag">Update</span>
+          <h2 class="reader-title">Photography and thoughts sections are under construction</h2>
+          <div class="reader-meta">2026 · Portfolio Update</div>
+
+          <div class="reader-body">
+            <p>
+              The photography section will gradually collect selected images, visual notes, and event photography.
+              The thoughts section will hold shorter pieces that do not fit into formal articles.
+            </p>
+
+            <p>
+              Both sections are meant to make the website feel less like a static CV and more like a living archive.
+            </p>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+  <script>
+    const cards = document.querySelectorAll('.news-card');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          const delay = parseInt(entry.target.dataset.delay || 0);
+          setTimeout(() => entry.target.classList.add('visible'), delay);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    cards.forEach((card, i) => {
+      card.dataset.delay = i * 80;
+      observer.observe(card);
+    });
+
+    cards.forEach(card => {
+      card.addEventListener('click', () => {
+        const readerId = card.dataset.reader;
+        const reader = document.getElementById(readerId);
+
+        document.querySelectorAll('.news-reader.open').forEach(openReader => {
+          if (openReader !== reader) {
+            openReader.classList.remove('open');
+          }
+        });
+
+        if (reader) {
+          reader.classList.toggle('open');
+
+          if (reader.classList.contains('open')) {
+            setTimeout(() => {
+              reader.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 120);
+          }
+        }
+      });
+    });
+
+    document.querySelectorAll('.reader-close').forEach(button => {
+      button.addEventListener('click', (event) => {
+        event.stopPropagation();
+        button.closest('.news-reader').classList.remove('open');
+      });
+    });
+  </script>
+
+</body>
+</html>
