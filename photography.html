@@ -206,14 +206,16 @@
 
     /* GALLERY */
     .photo-gallery {
-      display: grid;
-      grid-template-columns: repeat(12, 1fr);
+      display: flex;
+      /* grid-template-columns: repeat(12, 1fr); */
       gap: 16px;
-      align-items: stretch;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-behavior: smooth;
     }
 
     .photo-card {
-      grid-column: span 4;
+      /* grid-column: span 4; */
       height: 360px;
       position: relative;
       overflow: hidden;
@@ -245,10 +247,12 @@
     }
 
     .photo-card:hover {
-      grid-column: span 5;
+      /* grid-column: span 5; */
       border-color: rgba(74,124,89,0.38);
       box-shadow: 0 28px 70px rgba(29,38,25,0.16);
       z-index: 3;
+      /* width: 700px; */
+      transition: all 0.6s;
     }
 
     .photo-card.large:hover {
@@ -256,19 +260,30 @@
     }
 
     .photo-card img {
-      width: 100%;
+      /* width: 100%;
       height: 100%;
       object-fit: cover;
       transform: scale(1);
       filter: saturate(0.94) contrast(1.02);
       transition:
         transform 0.65s var(--ease),
-        filter 0.45s ease;
+        filter 0.45s ease; */
+        width:300px;
+      height:200px;
+      object-fit:cover;
+
+      border-radius:16px;
+
+      flex-shrink:0;
+
+      transition:0.6s;
+      cursor:pointer;
     }
 
     .photo-card:hover img {
       transform: scale(1.08);
       filter: saturate(1.04) contrast(1.05);
+      width: 600px;
     }
 
     .photo-overlay {
@@ -508,10 +523,10 @@
         </p>
       </header>
 
-      <section class="photo-gallery">
+      <div class="photo-gallery">
 
         <!-- PHOTO 01 -->
-        <article class="photo-card large" data-description="photo-1" id="places">
+        <article class="photo-card" data-description="photo-1" id="places">
           <img src="images/photography/photo-001.jpg" alt="Garlic at Mahatma Phule Mandai" />
 
           <div class="photo-overlay">
@@ -521,7 +536,7 @@
         </article>
 
         <!-- PHOTO 02 -->
-        <article class="photo-card tall" data-description="photo-2" id="people">
+        <article class="photo-card" data-description="photo-2" id="people">
           <img src="images/photography/photo-002.jpg" alt="Portrait photograph" />
 
           <div class="photo-overlay">
@@ -549,8 +564,9 @@
             <div class="photo-meta">Street · Observation</div>
           </div>
         </article>
-
-      </section>
+        
+        
+      </div>
 
       <!-- DESCRIPTION PANEL -->
       <section class="photo-description-panel" id="photoDescriptionPanel">
@@ -584,17 +600,16 @@
         category: "Places",
         title: "The little backbone of many cuisines",
         meta: "Mahatma Phule Mandai, Pune",
+        // garlic
         body: `
           <p>
-            Garlic is easy to miss because it is everywhere. It sits quietly in baskets,
-            kitchens, markets, and recipes, but it carries an enormous amount of flavour,
-            memory, and labour.
+            For many stomachs to be filled and pallets to be happy, cuisines never fail to amaze me with the depth it provides with just one ingredient- garlic. There’s no such thing as too much garlic. I would put this little magical bulb into anything I want savoury. 
           </p>
 
           <p>
-            This photograph was taken at Mahatma Phule Mandai in Pune. I liked how something
-            so ordinary could still feel sculptural when seen closely.
+            An early morning walk around Mahatma Phule Mandai in Pune, offered the slow peaceful start to the historical heart of the city. The sun was still shy to show its heat, the vendors were only sipping their first chai of the day, vegetables freshly opened from the sacks for just a few, many still tied up from the busy day yesterday.
           </p>
+          <p>Some little sparrows making their presence known freely near the ……………..</p>
         `
       },
 
