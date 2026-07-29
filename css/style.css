@@ -498,166 +498,162 @@ img {
 
 
 
-/* ============================================================
-   READABILITY UPGRADE 29-07-26 11:45am
-   ============================================================ */
 
-/* --- Body text on all inner pages (light-page) --- */
-.light-page body,
-.light-page {
-  font-size: 17px;
-  line-height: 1.9;
+/*
+  ============================================================
+  29-07-26 12:20pm
+  ============================================================
+*/
+
+/* ── TASK 1: READABLE FONTS ON ALL INNER PAGES ── */
+
+/* Base font size upgrade */
+.light-page,
+body.light-page {
+  font-size: 17px !important;
+  line-height: 1.9 !important;
 }
 
-/* --- Bio / prose text --- */
-.bio-text {
+/* Bio / prose blocks */
+.bio-text,
+.bio-text p {
   font-size: 17px !important;
   line-height: 1.95 !important;
-  color: #2e3a2e !important;   /* darker than before, easier on eyes */
+  color: #2a362a !important;
 }
 
-/* --- Article reader body --- */
-.reader-body {
+/* Article & paper reader body */
+.reader-body,
+.reader-body p {
   font-size: 17px !important;
-  line-height: 2.0 !important;
-  color: #2e3a2e !important;
+  line-height: 2.05 !important;
+  color: #2a362a !important;
 }
 
-/* --- Thoughts / literary prose --- */
+/* Thoughts / literary prose */
 .thought-body,
-.thought-text {
+.thought-body p,
+.thought-text,
+.thought-text p {
   font-size: 18px !important;
   line-height: 2.1 !important;
-  color: #2e3a2e !important;
+  color: #2a362a !important;
 }
 
-/* --- Article card titles on articles.html --- */
+/* Article card titles */
 .article-title {
-  font-size: clamp(22px, 2.5vw, 30px) !important;
+  font-size: clamp(22px, 2.4vw, 30px) !important;
 }
 
-/* --- Article excerpt / teaser lines --- */
+/* Article excerpt teaser */
 .article-excerpt {
   font-size: 15px !important;
-  line-height: 1.75 !important;
-  opacity: 0.85 !important;   /* was too faint before */
+  line-height: 1.8 !important;
+  opacity: 1 !important;
   color: #3a4a3a !important;
 }
 
-/* --- Timeline descriptions on about.html --- */
+/* Timeline descriptions (about page) */
 .timeline-desc {
   font-size: 14px !important;
-  line-height: 1.75 !important;
+  line-height: 1.8 !important;
   color: #3a4a3a !important;
 }
 
-/* --- Sidebar links — slightly bigger for readability --- */
-.sidebar-links a {
-  font-size: 14px !important;
-  line-height: 1.6 !important;
-}
-
-/* --- Quick facts on about.html --- */
+/* Quick facts (about page) */
 .quick-fact-value {
   font-size: 15px !important;
-  line-height: 1.65 !important;
+  line-height: 1.7 !important;
 }
 
-/* --- News entries --- */
-.news-date {
-  font-size: 13px !important;
-}
-.news-text,
-.news-body {
-  font-size: 16px !important;
-  line-height: 1.85 !important;
-  color: #2e3a2e !important;
-}
-
-/* --- Photography captions --- */
-.photo-caption,
-.gallery-caption {
+/* Sidebar nav links */
+.sidebar-links a {
   font-size: 14px !important;
-  line-height: 1.65 !important;
+  line-height: 1.7 !important;
 }
 
-/* --- Page header tagline / intro paragraph --- */
+/* Page intro paragraph */
 .page-intro {
   font-size: 17px !important;
   line-height: 1.85 !important;
   color: #3a4a3a !important;
 }
 
-/* --- Skill tags --- */
+/* Skill tags */
 .skill-tag {
   font-size: 14px !important;
-  line-height: 1.55 !important;
+  line-height: 1.6 !important;
+}
+
+/* News entries */
+.news-body,
+.news-text {
+  font-size: 16px !important;
+  line-height: 1.9 !important;
+  color: #2a362a !important;
+}
+
+/* Photography captions */
+.photo-caption,
+.gallery-caption {
+  font-size: 14px !important;
+  line-height: 1.65 !important;
 }
 
 
+/* ── TASK 2: GRADIENT OVERLAY ON ALL HOMEPAGE TILES ── */
 
-/* ============================================================
-   TASK 2 — Gradient overlay on ALL homepage tiles
-   ============================================================ */
-
-/* Add a dark-to-transparent gradient on every tile so the
-   title and teaser text at the bottom are always readable.
-   This matches the existing photography tile gradient. */
-
+/* Every tile gets a bottom-up dark gradient so text is readable */
 .tile {
-  position: relative;  /* already set, just confirming */
-  overflow: hidden;    /* already set */
+  position: relative !important;
+  overflow: hidden !important;
 }
 
-/* The gradient sits above the tile background but below text */
 .tile::after {
-  content: '';
-  position: absolute;
-  inset: 0;
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
   background: linear-gradient(
     to top,
-    rgba(10, 16, 10, 0.72) 0%,
-    rgba(10, 16, 10, 0.18) 55%,
+    rgba(8, 14, 8, 0.78) 0%,
+    rgba(8, 14, 8, 0.20) 50%,
     transparent 100%
-  );
-  z-index: 0;
-  pointer-events: none;
-  border-radius: inherit;
-  transition: opacity 0.3s ease;
+  ) !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+  border-radius: inherit !important;
+  transition: opacity 0.3s ease !important;
 }
 
 .tile:hover::after {
-  opacity: 0.85;
+  opacity: 0.88 !important;
 }
 
-/* Make sure all tile content sits ABOVE the gradient */
-.tile-top,
-.tile-bottom,
-.tile-index,
-.tile-arrow,
-.tile-title,
-.tile-teaser,
-.tile .photo-bg,
+/* All direct tile children sit above the gradient */
 .tile > * {
-  position: relative;
-  z-index: 1;
+  position: relative !important;
+  z-index: 1 !important;
 }
 
-/* Lighten tile text slightly since gradient now backs it */
-.tile-title {
-  color: var(--text-primary);
-  text-shadow: 0 1px 8px rgba(0,0,0,0.35);
+/* Tile text visibility over gradient */
+.tile .tile-title {
+  color: #edeee8 !important;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.4) !important;
 }
 
-.tile-teaser {
-  color: var(--text-secondary);
+.tile .tile-teaser {
+  color: #a8b8a0 !important;
 }
 
-/* For the wide resume tile (horizontal), gradient flows left→right */
+.tile .tile-index {
+  color: #6a826a !important;
+}
+
+/* Resume tile: horizontal gradient (left→right) */
 .tile-resume::after {
   background: linear-gradient(
     to right,
-    rgba(10, 16, 10, 0.55) 0%,
-    transparent 60%
-  );
+    rgba(8, 14, 8, 0.65) 0%,
+    transparent 65%
+  ) !important;
 }
