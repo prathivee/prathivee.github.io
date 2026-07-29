@@ -593,3 +593,71 @@ img {
   font-size: 14px !important;
   line-height: 1.55 !important;
 }
+
+
+
+/* ============================================================
+   TASK 2 — Gradient overlay on ALL homepage tiles
+   ============================================================ */
+
+/* Add a dark-to-transparent gradient on every tile so the
+   title and teaser text at the bottom are always readable.
+   This matches the existing photography tile gradient. */
+
+.tile {
+  position: relative;  /* already set, just confirming */
+  overflow: hidden;    /* already set */
+}
+
+/* The gradient sits above the tile background but below text */
+.tile::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(10, 16, 10, 0.72) 0%,
+    rgba(10, 16, 10, 0.18) 55%,
+    transparent 100%
+  );
+  z-index: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  transition: opacity 0.3s ease;
+}
+
+.tile:hover::after {
+  opacity: 0.85;
+}
+
+/* Make sure all tile content sits ABOVE the gradient */
+.tile-top,
+.tile-bottom,
+.tile-index,
+.tile-arrow,
+.tile-title,
+.tile-teaser,
+.tile .photo-bg,
+.tile > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Lighten tile text slightly since gradient now backs it */
+.tile-title {
+  color: var(--text-primary);
+  text-shadow: 0 1px 8px rgba(0,0,0,0.35);
+}
+
+.tile-teaser {
+  color: var(--text-secondary);
+}
+
+/* For the wide resume tile (horizontal), gradient flows left→right */
+.tile-resume::after {
+  background: linear-gradient(
+    to right,
+    rgba(10, 16, 10, 0.55) 0%,
+    transparent 60%
+  );
+}
