@@ -7,278 +7,185 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
   <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    html { font-size: 16px; scroll-behavior: smooth; }
     :root {
-      --bg: #f5f3ee;
-      --surface: #eceae4;
-      --text-primary: #1a1f1a;
-      --text-secondary: #4a5240;
-      --text-tertiary: #8a9180;
-      --green-muted: #4a7c59;
-      --green-bright: #6aad80;
-      --green-dim: #d4e4da;
-      --border: rgba(74,124,89,0.15);
-      --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      --bg:#f5f3ee; --surface:#eceae4; --text-primary:#1a1f1a;
+      --text-secondary:#2a362a; --text-tertiary:#8a9180;
+      --green-muted:#4a7c59; --green-bright:#6aad80;
+      --green-dim:#d4e4da; --border:rgba(74,124,89,0.15);
+      --ease:cubic-bezier(0.25,0.46,0.45,0.94);
     }
-    body { background: var(--bg); color: var(--text-primary); font-family: 'DM Sans', sans-serif; font-weight: 300; -webkit-font-smoothing: antialiased; }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { font-size:17px; scroll-behavior:smooth; }
+    body { background:var(--bg); color:var(--text-primary); font-family:'DM Sans',sans-serif; font-weight:300; -webkit-font-smoothing:antialiased; }
 
-    /* TOPBAR */
-    .topbar { position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 56px; background: rgba(245,243,238,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 40px; }
-    .topbar-back { font-size: 12px; letter-spacing: 0.1em; color: var(--text-secondary); text-decoration: none; display: flex; align-items: center; gap: 8px; transition: color 0.2s ease; }
-    .topbar-back:hover { color: var(--green-muted); }
-    .topbar-back::before { content: '←'; font-size: 14px; }
-    .topbar-section { font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--text-tertiary); }
+    .topbar { position:fixed; top:0; left:0; right:0; z-index:100; height:56px; background:rgba(245,243,238,0.94); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; padding:0 40px; }
+    .topbar-back { font-size:12px; letter-spacing:0.1em; color:var(--text-secondary); text-decoration:none; display:flex; align-items:center; gap:8px; transition:color .2s; }
+    .topbar-back:hover { color:var(--green-muted); }
+    .topbar-back::before { content:'←'; font-size:14px; }
+    .topbar-section { font-size:11px; letter-spacing:0.22em; text-transform:uppercase; color:var(--text-tertiary); }
 
-    /* LAYOUT */
-    .page-layout { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; padding-top: 56px; }
+    .page-layout { display:grid; grid-template-columns:240px 1fr; min-height:100vh; padding-top:56px; }
 
-    /* SIDEBAR */
-    .sidebar { position: sticky; top: 56px; height: calc(100vh - 56px); overflow-y: auto; border-right: 1px solid var(--border); padding: 48px 32px; display: flex; flex-direction: column; gap: 40px; }
-    .sidebar-group-label { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 14px; }
-    .sidebar-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-    .sidebar-links a { font-size: 13px; font-weight: 300; color: var(--text-secondary); text-decoration: none; padding-left: 12px; border-left: 2px solid transparent; transition: color 0.2s ease, border-color 0.2s ease; display: block; }
-    .sidebar-links a:hover, .sidebar-links a.active { color: var(--green-muted); border-left-color: var(--green-muted); }
-    .sidebar-contact { margin-top: auto; }
-    .sidebar-contact a { font-size: 12px; color: var(--green-muted); text-decoration: none; transition: opacity 0.2s ease; }
-    .sidebar-contact a:hover { opacity: 0.7; }
+    .sidebar { position:sticky; top:56px; height:calc(100vh - 56px); overflow-y:auto; border-right:1px solid var(--border); padding:48px 32px; display:flex; flex-direction:column; gap:40px; }
+    .sidebar-group-label { font-size:10px; letter-spacing:0.22em; text-transform:uppercase; color:var(--text-tertiary); margin-bottom:14px; }
+    .sidebar-links { list-style:none; display:flex; flex-direction:column; gap:10px; }
+    .sidebar-links a { font-size:14px; font-weight:300; color:var(--text-secondary); text-decoration:none; padding-left:12px; border-left:2px solid transparent; transition:color .2s, border-color .2s; display:block; line-height:1.7; }
+    .sidebar-links a:hover, .sidebar-links a.active { color:var(--green-muted); border-left-color:var(--green-muted); }
+    .sidebar-contact { margin-top:auto; }
+    .sidebar-contact a { font-size:12px; color:var(--green-muted); text-decoration:none; }
 
-    /* MAIN */
-    .main-content { padding: 64px 80px 120px; max-width: 860px; }
+    .main-content { padding:64px 80px 120px; max-width:900px; }
 
-    /* HEADER */
-    .page-header { margin-bottom: 56px; opacity: 0; animation: fadeUp 0.7s var(--ease) 0.1s forwards; }
-    .page-header-label { font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--green-muted); margin-bottom: 16px; }
-    .page-header h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(40px, 5vw, 64px); font-weight: 300; line-height: 1.0; letter-spacing: -0.02em; }
-    .page-header h1 em { font-style: italic; color: var(--green-muted); }
-    .page-intro { font-size: 15px; color: var(--text-secondary); line-height: 1.7; margin-top: 20px; max-width: 540px; }
+    .page-header { margin-bottom:56px; opacity:0; animation:fadeUp .7s var(--ease) .1s forwards; }
+    .page-header-label { font-size:11px; letter-spacing:0.22em; text-transform:uppercase; color:var(--green-muted); margin-bottom:16px; }
+    .page-header h1 { font-family:'Cormorant Garamond',serif; font-size:clamp(40px,5vw,64px); font-weight:300; line-height:1.0; letter-spacing:-0.02em; }
+    .page-header h1 em { font-style:italic; color:var(--green-muted); }
+    .page-intro { font-size:17px; color:var(--text-secondary); line-height:1.85; margin-top:20px; max-width:540px; }
 
-    /* ARTICLE CARDS — vertical bars */
-    .articles-list { display: flex; flex-direction: column; gap: 0; }
+    .articles-list { display:flex; flex-direction:column; }
 
-    .article-card {
-      border-top: 1px solid var(--border);
-      padding: 32px 0;
-      display: grid;
-      grid-template-columns: 80px 1fr auto;
-      gap: 32px;
-      align-items: start;
-      text-decoration: none;
-      color: inherit;
-      opacity: 0;
-      transform: translateY(16px);
-      transition: background 0.25s ease;
-      cursor: pointer;
-    }
-    .article-card:last-child { border-bottom: 1px solid var(--border); }
-    .article-card.visible { opacity: 1; transform: translateY(0); transition: opacity 0.6s var(--ease), transform 0.6s var(--ease), background 0.25s ease; }
-    .article-card:hover { background: var(--surface); margin: 0 -24px; padding-left: 24px; padding-right: 24px; border-radius: 8px; border-top-color: transparent; }
-    .article-card:hover + .article-card { border-top-color: transparent; }
+    .article-card { border-top:1px solid var(--border); padding:32px 0; display:grid; grid-template-columns:72px 1fr auto; gap:28px; align-items:start; text-decoration:none; color:inherit; opacity:0; transform:translateY(16px); cursor:pointer; transition:background .25s; }
+    .article-card:last-child { border-bottom:1px solid var(--border); }
+    .article-card.visible { opacity:1; transform:translateY(0); transition:opacity .6s var(--ease), transform .6s var(--ease), background .25s; }
+    .article-card:hover { background:var(--surface); margin:0 -24px; padding-left:24px; padding-right:24px; border-radius:8px; }
 
-    .article-number { font-size: 11px; letter-spacing: 0.1em; color: var(--text-tertiary); padding-top: 6px; font-variant-numeric: tabular-nums; }
+    .article-number { font-size:11px; letter-spacing:0.1em; color:var(--text-tertiary); padding-top:5px; }
+    .article-tag { display:inline-block; font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--green-muted); background:var(--green-dim); padding:3px 10px; border-radius:20px; margin-bottom:12px; }
+    .article-title { font-family:'Cormorant Garamond',serif; font-size:clamp(22px,2.4vw,30px); font-weight:400; line-height:1.2; color:var(--text-primary); margin-bottom:12px; letter-spacing:-0.01em; }
+    .article-excerpt { font-size:15px; line-height:1.8; color:var(--text-secondary); max-width:520px; }
+    .article-meta { font-size:11px; color:var(--text-tertiary); margin-top:14px; letter-spacing:0.04em; }
+    .article-arrow { font-size:18px; color:var(--text-tertiary); padding-top:5px; transition:color .25s, transform .25s; }
+    .article-card:hover .article-arrow { color:var(--green-muted); transform:translate(3px,-3px); }
 
-    .article-body {}
-    .article-tag {
-      display: inline-block;
-      font-size: 10px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--green-muted);
-      background: var(--green-dim);
-      padding: 3px 10px;
-      border-radius: 20px;
-      margin-bottom: 12px;
-    }
-    .article-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(20px, 2.2vw, 27px); font-weight: 400; line-height: 1.2; color: var(--text-primary); margin-bottom: 12px; letter-spacing: -0.01em; }
-    .article-excerpt { font-size: 13px; line-height: 1.7; color: var(--text-secondary); max-width: 500px; opacity: 0.7; transition: opacity 0.25s ease; }
-    .article-card:hover .article-excerpt { opacity: 1; }
-    .article-meta { font-size: 11px; color: var(--text-tertiary); margin-top: 14px; letter-spacing: 0.04em; }
+    .article-reader { display:none; background:var(--surface); border-radius:12px; padding:52px 60px; margin:8px 0 32px; border:1px solid var(--border); }
+    .article-reader.open { display:block; animation:fadeUp .4s var(--ease) forwards; }
+    .reader-close { float:right; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-tertiary); cursor:pointer; border:1px solid var(--border); padding:6px 14px; border-radius:20px; background:none; transition:color .2s, border-color .2s; }
+    .reader-close:hover { color:var(--green-muted); border-color:var(--green-muted); }
+    .reader-label { font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:var(--green-muted); margin-bottom:8px; }
+    .reader-title { font-family:'Cormorant Garamond',serif; font-size:clamp(26px,3vw,40px); font-weight:400; line-height:1.15; margin:16px 0 8px; letter-spacing:-0.01em; }
+    .reader-byline { font-size:12px; color:var(--text-tertiary); letter-spacing:0.06em; margin-bottom:36px; padding-bottom:24px; border-bottom:1px solid var(--border); }
+    .reader-body { font-size:17px; line-height:2.05; color:#2a362a; }
+    .reader-body p + p { margin-top:22px; }
+    .reader-body strong { color:var(--text-primary); font-weight:500; }
+    .reader-body h3 { font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:400; color:var(--text-primary); margin:32px 0 12px; }
 
-    .article-arrow { font-size: 18px; color: var(--text-tertiary); padding-top: 6px; transition: color 0.25s ease, transform 0.25s ease; }
-    .article-card:hover .article-arrow { color: var(--green-muted); transform: translate(3px, -3px); }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
 
-    /* ARTICLE READER — opens below card on click */
-    .article-reader {
-      display: none;
-      background: var(--surface);
-      border-radius: 12px;
-      padding: 48px 56px;
-      margin: 8px 0 32px;
-      border: 1px solid var(--border);
-      animation: fadeUp 0.4s var(--ease) forwards;
-    }
-    .article-reader.open { display: block; }
-    .reader-close { float: right; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-tertiary); cursor: pointer; border: 1px solid var(--border); padding: 6px 14px; border-radius: 20px; background: none; transition: color 0.2s ease, border-color 0.2s ease; }
-    .reader-close:hover { color: var(--green-muted); border-color: var(--green-muted); }
-    .reader-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(26px, 3vw, 36px); font-weight: 400; line-height: 1.15; margin: 24px 0 8px; letter-spacing: -0.01em; }
-    .reader-byline { font-size: 12px; color: var(--text-tertiary); letter-spacing: 0.06em; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
-    .reader-body { font-size: 16px; line-height: 1.95; color: var(--text-secondary); }
-    .reader-body p + p { margin-top: 20px; }
-    .reader-body strong { color: var(--text-primary); font-weight: 500; }
-
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-
-    @media (max-width: 900px) {
-      .page-layout { grid-template-columns: 1fr; }
-      .sidebar { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--border); padding: 24px; flex-direction: row; flex-wrap: wrap; gap: 16px; }
-      .sidebar-contact { margin-top: 0; }
-      .main-content { padding: 40px 24px 80px; }
-      .article-card { grid-template-columns: 48px 1fr auto; gap: 16px; }
-      .article-reader { padding: 32px 24px; }
+    @media (max-width:900px) {
+      .page-layout { grid-template-columns:1fr; }
+      .sidebar { position:static; height:auto; border-right:none; border-bottom:1px solid var(--border); padding:24px; flex-direction:row; flex-wrap:wrap; gap:16px; }
+      .sidebar-contact { margin-top:0; }
+      .main-content { padding:40px 24px 80px; }
+      .article-card { grid-template-columns:48px 1fr auto; gap:16px; }
+      .article-reader { padding:32px 20px; }
     }
   </style>
 </head>
 <body>
 
-  <nav class="topbar">
-    <a class="topbar-back" href="index.html">Prathivee</a>
-    <span class="topbar-section">Articles</span>
-  </nav>
+<nav class="topbar">
+  <a class="topbar-back" href="index.html">Prathivee</a>
+  <span class="topbar-section">Articles</span>
+</nav>
 
-  <div class="page-layout">
-    <aside class="sidebar">
-      <div>
-        <p class="sidebar-group-label">Filter</p>
-        <ul class="sidebar-links">
-          <li><a href="#" class="active" data-filter="all">All Articles</a></li>
-          <li><a href="#" data-filter="geoeconomics">Geoeconomics</a></li>
-          <li><a href="#" data-filter="trade">Trade</a></li>
-          <li><a href="#" data-filter="policy">Policy</a></li>
-        </ul>
+<div class="page-layout">
+  <aside class="sidebar">
+    <div>
+      <p class="sidebar-group-label">On this page</p>
+      <ul class="sidebar-links">
+        <li><a href="#" class="active">All Articles</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="sidebar-group-label">Explore</p>
+      <ul class="sidebar-links">
+        <li><a href="about.html">About</a></li>
+        <li><a href="papers.html">Papers</a></li>
+        <li><a href="thoughts.html">Thoughts</a></li>
+        <li><a href="photography.html">Photography</a></li>
+        <li><a href="resume.html">Résumé</a></li>
+      </ul>
+    </div>
+    <div class="sidebar-contact">
+      <p class="sidebar-group-label">Contact</p>
+      <a href="https://www.linkedin.com/in/prathivee/" target="_blank" rel="noopener">LinkedIn →</a>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <header class="page-header">
+      <p class="page-header-label">Writing</p>
+      <h1>Articles &amp; <em>Essays</em></h1>
+      <p class="page-intro">On political economy, international trade, and the systems quietly running everything.</p>
+    </header>
+
+    <div class="articles-list">
+
+      <!-- ARTICLE 1 — New Zealand (existing) -->
+      <div class="article-card" data-tags="geoeconomics trade">
+        <span class="article-number">01</span>
+        <div class="article-body">
+          <span class="article-tag">Geoeconomics</span>
+          <h2 class="article-title">The "Productivity Puzzle" Behind the Success Story of New Zealand</h2>
+          <p class="article-excerpt">How a remote, sparsely populated nation built global standing through institutional stability, trade credibility, and the art of strategic hedging.</p>
+          <p class="article-meta">2024 · Prathivee Nairy</p>
+        </div>
+        <span class="article-arrow">↗</span>
       </div>
-      <div>
-        <p class="sidebar-group-label">Explore</p>
-        <ul class="sidebar-links">
-          <li><a href="about.html">About</a></li>
-          <li><a href="thoughts.html">Thoughts</a></li>
-          <li><a href="photography.html">Photography</a></li>
-          <li><a href="resume.html">Résumé</a></li>
-        </ul>
+      <div class="article-reader" id="reader-1">
+        <button class="reader-close" onclick="closeReader('reader-1')">Close ✕</button>
+        <p class="reader-label">Geoeconomics</p>
+        <h2 class="reader-title">The "Productivity Puzzle" Behind the Success Story of New Zealand</h2>
+        <p class="reader-byline">Prathivee Nairy · 2024</p>
+        <div class="reader-body">
+          <p>When people think about global political economy, countries like the United States, China, or Russia usually dominate the conversation. Yet, tucked away in the South Pacific, <strong>New Zealand</strong> presents one of the most interesting examples of how a small state survives and even succeeds in an increasingly competitive and interconnected world.</p>
+          <p>At first glance, New Zealand almost feels geographically disconnected from the rest of the world. It is remote, sparsely populated, and heavily dependent on external trade. But that distance has shaped the country's political and economic identity in unique ways. Unlike major powers that rely on military influence or industrial dominance, New Zealand built its global position through institutional stability, trade credibility, and strategic diplomacy.</p>
+          <h3>From Britain's Farm to Asia's Trading Partner</h3>
+          <p>Historically, New Zealand's economy was deeply tied to Britain. For decades, its role in the global economy was relatively simple: export agricultural goods to the British market. Dairy, meat, and wool formed the backbone of its economic structure, reinforcing a classic colonial trade pattern where peripheral economies supplied raw materials to industrial centres.</p>
+          <p>However, globalisation gradually altered this arrangement. As Britain moved toward Europe and Asia became the centre of global economic growth, New Zealand also had to reposition itself. Today, China has emerged as New Zealand's largest trading partner. This transition says a lot about the changing nature of global political economy itself. Economic gravity has shifted toward the Indo-Pacific, and New Zealand has adapted faster than many expected.</p>
+          <h3>The Contradiction Behind the Stability</h3>
+          <p>What makes New Zealand fascinating is that beneath its image of prosperity and political calm lies a deeper structural contradiction. The country ranks highly on governance, transparency, and quality of life indicators, yet economists frequently point toward what is known as New Zealand's <strong>"productivity puzzle."</strong> Despite being a developed economy, productivity growth remains relatively weak compared to several OECD economies — constrained by geographical isolation, limited domestic scale, and dependence on commodity exports.</p>
+          <p>In many ways, New Zealand reflects the broader dilemma of globalisation. Integration into global markets generates wealth, but it also creates dependence and vulnerability. The same export-oriented model that supports economic growth also exposes the country to external shocks, fluctuations in Chinese demand, and global supply chain disruptions.</p>
+          <h3>Balancing Between Economics and Geopolitics</h3>
+          <p>Geopolitically, New Zealand walks a careful line. It remains closely aligned with the Western liberal order through partnerships like the Five Eyes alliance, while simultaneously maintaining strong economic relations with China. This balancing act reflects what scholars often describe as <strong>"strategic hedging"</strong> — avoiding complete dependence on either side while maximising economic and diplomatic flexibility.</p>
+          <p>Its long-standing nuclear-free foreign policy further strengthens this image of independent diplomacy. Rather than projecting hard military power, New Zealand positions itself as a rules-based, cooperative middle power that values multilateralism and international law.</p>
+          <p>Ultimately, New Zealand's global standing is not built on size or coercive power. It is built on adaptability. For students of geoeconomics, New Zealand is not just another developed economy. It is a case study in how geography, trade, politics, and global power intersect in the modern world.</p>
+        </div>
       </div>
-      <div class="sidebar-contact">
-        <p class="sidebar-group-label">Contact</p>
-        <a href="https://www.linkedin.com/in/prathivee/" target="_blank" rel="noopener">LinkedIn →</a>
-      </div>
-    </aside>
 
-    <main class="main-content">
-      <header class="page-header">
-        <p class="page-header-label">Writing</p>
-        <h1>Articles &amp; <em>Essays</em></h1>
-        <p class="page-intro">On political economy, international trade, and the systems quietly running everything.</p>
-      </header>
+      <!-- ADD NEW ARTICLES BELOW THIS LINE
+           Copy the block above (article-card + article-reader) and increment the number -->
 
-      <div class="articles-list">
+    </div>
+  </main>
+</div>
 
-        <!-- ARTICLE 1 — New Zealand (your actual article) -->
-        <div class="article-card" data-tags="geoeconomics trade">
-          <span class="article-number">01</span>
-          <div class="article-body">
-            <span class="article-tag">Geoeconomics</span>
-            <h2 class="article-title">The "Productivity Puzzle" Behind the Success Story of New Zealand</h2>
-            <p class="article-excerpt">How a remote, sparsely populated nation built global standing through institutional stability, strategic hedging, and the art of staying economically connected.</p>
-            <p class="article-meta">2026 &nbsp;·&nbsp; Prathivee Nairy</p>
-          </div>
-          <span class="article-arrow">↗</span>
-        </div>
-        <div class="article-reader" id="reader-1">
-          <button class="reader-close" onclick="closeReader('reader-1')">Close ✕</button>
-          <p style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--green-muted);">Geoeconomics</p>
-          <h2 class="reader-title">The "Productivity Puzzle" Behind the Success Story of New Zealand</h2>
-          <p class="reader-byline">Prathivee Nairy &nbsp;·&nbsp; 2026</p>
-          <div class="reader-body">
-            <p>When people think about global political economy, countries like the United States, China, or Russia usually dominate the conversation. Yet, tucked away in the South Pacific, <strong>New Zealand</strong> presents one of the most interesting examples of how a small state survives and even succeeds in an increasingly competitive and interconnected world.</p>
-            <p>At first glance, New Zealand almost feels geographically disconnected from the rest of the world. It is remote, sparsely populated, and heavily dependent on external trade. But that distance has shaped the country's political and economic identity in unique ways. Unlike major powers that rely on military influence or industrial dominance, New Zealand built its global position through institutional stability, trade credibility, and strategic diplomacy.</p>
-            <p><strong>From Britain's Farm to Asia's Trading Partner</strong></p>
-            <p>Historically, New Zealand's economy was deeply tied to Britain. For decades, its role in the global economy was relatively simple: export agricultural goods to the British market. Dairy, meat, and wool formed the backbone of its economic structure, reinforcing a classic colonial trade pattern where peripheral economies supplied raw materials to industrial centres.</p>
-            <p>However, globalization gradually altered this arrangement. As Britain moved toward Europe and Asia became the centre of global economic growth, New Zealand also had to reposition itself. Today, China has emerged as New Zealand's largest trading partner. This transition says a lot about the changing nature of global political economy itself. Economic gravity has shifted toward the Indo Pacific, and New Zealand has adapted faster than many expected.</p>
-            <p><strong>The Contradiction Behind the Stability</strong></p>
-            <p>What makes New Zealand fascinating is that beneath its image of prosperity and political calm lies a deeper structural contradiction. The country ranks highly on governance, transparency, and quality of life indicators, yet economists frequently point toward what is known as New Zealand's "productivity puzzle." Despite being a developed economy, productivity growth remains relatively weak compared to several OECD economies — constrained by geographical isolation, limited domestic scale, and dependence on commodity exports.</p>
-            <p><strong>Balancing Between Economics and Geopolitics</strong></p>
-            <p>Geopolitically, New Zealand walks a careful line. It remains closely aligned with the Western liberal order through partnerships like the Five Eyes alliance, while simultaneously maintaining strong economic relations with China. This balancing act reflects what scholars often describe as "strategic hedging" — avoiding complete dependence on either side while maximizing economic and diplomatic flexibility.</p>
-            <p>Ultimately, New Zealand's global standing is not built on size or coercive power. It is built on adaptability. For students of geoeconomics, New Zealand is not just another developed economy. It is a case study in how geography, trade, politics, and global power intersect in the modern world.</p>
-          </div>
-        </div>
-
-        <!-- ARTICLE 2 — placeholder -->
-        <div class="article-card" data-tags="trade policy">
-          <span class="article-number">02</span>
-          <div class="article-body">
-            <span class="article-tag">Trade</span>
-            <h2 class="article-title">Article Title</h2>
-            <p class="article-excerpt">A short teaser line about what this article explores — coming soon.</p>
-            <p class="article-meta">2026 &nbsp;·&nbsp; Prathivee Nairy</p>
-          </div>
-          <span class="article-arrow">↗</span>
-        </div>
-        <div class="article-reader" id="reader-2">
-          <button class="reader-close" onclick="closeReader('reader-2')">Close ✕</button>
-          <h2 class="reader-title">Article Title</h2>
-          <p class="reader-byline">Prathivee Nairy &nbsp;·&nbsp; 2026</p>
-          <div class="reader-body"><p>Content coming soon.</p></div>
-        </div>
-
-        <!-- ARTICLE 3 — placeholder -->
-        <div class="article-card" data-tags="policy">
-          <span class="article-number">03</span>
-          <div class="article-body">
-            <span class="article-tag">Policy</span>
-            <h2 class="article-title">Article Title</h2>
-            <p class="article-excerpt">A short teaser line about what this article explores — coming soon.</p>
-            <p class="article-meta">2025 &nbsp;·&nbsp; Prathivee Nairy</p>
-          </div>
-          <span class="article-arrow">↗</span>
-        </div>
-        <div class="article-reader" id="reader-3">
-          <button class="reader-close" onclick="closeReader('reader-3')">Close ✕</button>
-          <h2 class="reader-title">Article Title</h2>
-          <p class="reader-byline">Prathivee Nairy &nbsp;·&nbsp; 2025</p>
-          <div class="reader-body"><p>Content coming soon.</p></div>
-        </div>
-
-      </div>
-    </main>
-  </div>
-
-  <script>
-    // Scroll reveal
-    const cards = document.querySelectorAll('.article-card');
-    const obs = new IntersectionObserver(entries => {
-      entries.forEach((e, i) => {
-        if (e.isIntersecting) { setTimeout(() => e.target.classList.add('visible'), i * 100); obs.unobserve(e.target); }
-      });
-    }, { threshold: 0.1 });
-    cards.forEach(c => obs.observe(c));
-
-    // Toggle reader
-    cards.forEach((card, i) => {
-      card.addEventListener('click', () => {
-        const id = 'reader-' + (i + 1);
-        const reader = document.getElementById(id);
-        if (!reader) return;
-        const isOpen = reader.classList.contains('open');
-        document.querySelectorAll('.article-reader').forEach(r => r.classList.remove('open'));
-        if (!isOpen) reader.classList.add('open');
-      });
+<script src="js/main.js"></script>
+<script>
+  const cards = document.querySelectorAll('.article-card');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach((e,i) => {
+      if (e.isIntersecting) { setTimeout(() => e.target.classList.add('visible'), i*80); obs.unobserve(e.target); }
     });
-    function closeReader(id) {
-      event.stopPropagation();
-      document.getElementById(id).classList.remove('open');
-    }
+  }, { threshold:0.08 });
+  cards.forEach(c => obs.observe(c));
 
-    // Filter
-    document.querySelectorAll('[data-filter]').forEach(btn => {
-      btn.addEventListener('click', e => {
-        e.preventDefault();
-        document.querySelectorAll('[data-filter]').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        const f = btn.dataset.filter;
-        cards.forEach(c => {
-          c.style.display = (f === 'all' || c.dataset.tags.includes(f)) ? 'grid' : 'none';
-        });
-      });
+  cards.forEach(card => {
+    card.addEventListener('click', () => {
+      const next = card.nextElementSibling;
+      if (!next || !next.classList.contains('article-reader')) return;
+      const isOpen = next.classList.contains('open');
+      document.querySelectorAll('.article-reader.open').forEach(r => r.classList.remove('open'));
+      if (!isOpen) { next.classList.add('open'); next.scrollIntoView({ behavior:'smooth', block:'nearest' }); }
     });
-  </script>
+  });
+
+  function closeReader(id) {
+    event.stopPropagation();
+    document.getElementById(id).classList.remove('open');
+  }
+</script>
 </body>
 </html>
