@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Papers — Prathivee</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    :root {
+      --bg:#f5f3ee; --surface:#eceae4; --text-primary:#1a1f1a;
+      --text-secondary:#2a362a; --text-tertiary:#8a9180;
+      --green-muted:#4a7c59; --green-bright:#6aad80;
+      --green-dim:#d4e4da; --border:rgba(74,124,89,0.15);
+      --ease:cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { font-size:17px; scroll-behavior:smooth; }
+    body { background:var(--bg); color:var(--text-primary); font-family:'DM Sans',sans-serif; font-weight:300; -webkit-font-smoothing:antialiased; }
+
+    .topbar { position:fixed; top:0; left:0; right:0; z-index:100; height:56px; background:rgba(245,243,238,0.94); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; padding:0 40px; }
+    .topbar-back { font-size:12px; letter-spacing:0.1em; color:var(--text-secondary); text-decoration:none; display:flex; align-items:center; gap:8px; transition:color .2s; }
+    .topbar-back:hover { color:var(--green-muted); }
+    .topbar-back::before { content:'←'; font-size:14px; }
+    .topbar-section { font-size:11px; letter-spacing:0.22em; text-transform:uppercase; color:var(--text-tertiary); }
+
+    .page-layout { display:grid; grid-template-columns:240px 1fr; min-height:100vh; padding-top:56px; }
+
+    .sidebar { position:sticky; top:56px; height:calc(100vh - 56px); overflow-y:auto; border-right:1px solid var(--border); padding:48px 32px; display:flex; flex-direction:column; gap:40px; }
+    .sidebar-group-label { font-size:10px; letter-spacing:0.22em; text-transform:uppercase; color:var(--text-tertiary); margin-bottom:14px; }
+    .sidebar-links { list-style:none; display:flex; flex-direction:column; gap:10px; }
+    .sidebar-links a { font-size:14px; font-weight:300; color:var(--text-secondary); text-decoration:none; padding-left:12px; border-left:2px solid transparent; transition:color .2s, border-color .2s; display:block; line-height:1.7; }
+    .sidebar-links a:hover, .sidebar-links a.active { color:var(--green-muted); border-left-color:var(--green-muted); }
+    .sidebar-contact { margin-top:auto; }
+    .sidebar-contact a { font-size:12px; color:var(--green-muted); text-decoration:none; }
+
+    .main-content { padding:64px 80px 120px; max-width:900px; }
+
+    .page-header { margin-bottom:56px; opacity:0; animation:fadeUp .7s var(--ease) .1s forwards; }
+    .page-header-label { font-size:11px; letter-spacing:0.22em; text-transform:uppercase; color:var(--green-muted); margin-bottom:16px; }
+    .page-header h1 { font-family:'Cormorant Garamond',serif; font-size:clamp(40px,5vw,64px); font-weight:300; line-height:1.0; letter-spacing:-0.02em; }
+    .page-header h1 em { font-style:italic; color:var(--green-muted); }
+    .page-intro { font-size:17px; color:var(--text-secondary); line-height:1.85; margin-top:20px; max-width:540px; }
+
+    /* Paper cards — rounded expand-on-hover style */
+    .papers-list { display:flex; flex-direction:column; gap:0; }
+
+    .paper-card { border-top:1px solid var(--border); padding:32px 0; display:grid; grid-template-columns:80px 1fr auto; gap:28px; align-items:start; opacity:0; transform:translateY(16px); cursor:pointer; transition:background .25s; }
+    .paper-card:last-child { border-bottom:1px solid var(--border); }
+    .paper-card.visible { opacity:1; transform:translateY(0); transition:opacity .6s var(--ease), transform .6s var(--ease), background .25s; }
+    .paper-card:hover { background:var(--surface); margin:0 -24px; padding-left:24px; padding-right:24px; border-radius:12px; }
+
+    .paper-number { font-size:11px; letter-spacing:0.1em; color:var(--text-tertiary); padding-top:5px; }
+
+    .paper-tag { display:inline-block; font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--green-muted); background:var(--green-dim); padding:3px 10px; border-radius:20px; margin-bottom:12px; }
+
+    .paper-title { font-family:'Cormorant Garamond',serif; font-size:clamp(20px,2.2vw,28px); font-weight:400; line-height:1.25; color:var(--text-primary); margin-bottom:10px; letter-spacing:-0.01em; }
+
+    .paper-tagline { font-size:14px; font-style:italic; color:var(--green-muted); margin-bottom:10px; line-height:1.5; }
+
+    .paper-excerpt { font-size:15px; line-height:1.8; color:var(--text-secondary); max-width:520px; }
+
+    .paper-meta { font-size:11px; color:var(--text-tertiary); margin-top:14px; letter-spacing:0.04em; }
+
+    .paper-arrow { font-size:18px; color:var(--text-tertiary); padding-top:5px; transition:color .25s, transform .25s; }
+    .paper-card:hover .paper-arrow { color:var(--green-muted); transform:translate(3px,-3px); }
+
+    /* Expanded reader */
+    .paper-reader { display:none; background:var(--surface); border-radius:16px; padding:52px 60px; margin:8px 0 32px; border:1px solid var(--border); }
+    .paper-reader.open { display:block; animation:fadeUp .4s var(--ease) forwards; }
+
+    .reader-close { float:right; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-tertiary); cursor:pointer; border:1px solid var(--border); padding:6px 14px; border-radius:20px; background:none; transition:color .2s, border-color .2s; }
+    .reader-close:hover { color:var(--green-muted); border-color:var(--green-muted); }
+
+    .reader-label { font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:var(--green-muted); margin-bottom:8px; }
+    .reader-title { font-family:'Cormorant Garamond',serif; font-size:clamp(24px,2.8vw,38px); font-weight:400; line-height:1.15; margin:16px 0 6px; letter-spacing:-0.01em; }
+    .reader-tagline { font-size:15px; font-style:italic; color:var(--green-muted); margin-bottom:6px; }
+    .reader-byline { font-size:12px; color:var(--text-tertiary); letter-spacing:0.06em; margin-bottom:36px; padding-bottom:24px; border-bottom:1px solid var(--border); }
+
+    .reader-body { font-size:17px; line-height:2.05; color:#2a362a; }
+    .reader-body p + p { margin-top:22px; }
+    .reader-body strong { color:var(--text-primary); font-weight:500; }
+    .reader-body h3 { font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:400; color:var(--text-primary); margin:36px 0 14px; letter-spacing:-0.01em; }
+
+    .strategy-box { background:rgba(74,124,89,0.08); border:1px solid var(--green-dim); border-radius:12px; padding:24px 28px; margin-top:32px; }
+    .strategy-box p { font-size:15px; line-height:1.75; color:var(--text-secondary); }
+    .strategy-box p + p { margin-top:10px; }
+    .strategy-box strong { color:var(--green-muted); font-weight:500; }
+
+    @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+
+    @media (max-width:900px) {
+      .page-layout { grid-template-columns:1fr; }
+      .sidebar { position:static; height:auto; border-right:none; border-bottom:1px solid var(--border); padding:24px; flex-direction:row; flex-wrap:wrap; gap:16px; }
+      .sidebar-contact { margin-top:0; }
+      .main-content { padding:40px 24px 80px; }
+      .paper-card { grid-template-columns:48px 1fr auto; gap:16px; }
+      .paper-reader { padding:32px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="topbar">
+  <a class="topbar-back" href="index.html">Prathivee</a>
+  <span class="topbar-section">Research Papers</span>
+</nav>
+
+<div class="page-layout">
+  <aside class="sidebar">
+    <div>
+      <p class="sidebar-group-label">Filter by field</p>
+      <ul class="sidebar-links">
+        <li><a href="#" class="active" data-filter="all">All Papers</a></li>
+        <li><a href="#" data-filter="environmental">Environmental Economics</a></li>
+        <li><a href="#" data-filter="urban">Urban Economics</a></li>
+        <li><a href="#" data-filter="trade">Trade</a></li>
+        <li><a href="#" data-filter="macro">Macroeconomics</a></li>
+        <li><a href="#" data-filter="behavioral">Behavioral Economics</a></li>
+        <li><a href="#" data-filter="geoeconomics">Geoeconomics</a></li>
+        <li><a href="#" data-filter="gametheory">Game Theory</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="sidebar-group-label">Explore</p>
+      <ul class="sidebar-links">
+        <li><a href="about.html">About</a></li>
+        <li><a href="articles.html">Articles</a></li>
+        <li><a href="thoughts.html">Thoughts</a></li>
+        <li><a href="photography.html">Photography</a></li>
+        <li><a href="resume.html">Résumé</a></li>
+      </ul>
+    </div>
+    <div class="sidebar-contact">
+      <p class="sidebar-group-label">Contact</p>
+      <a href="https://www.linkedin.com/in/prathivee/" target="_blank" rel="noopener">LinkedIn →</a>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <header class="page-header">
+      <p class="page-header-label">Research</p>
+      <h1>Research <em>Papers</em></h1>
+      <p class="page-intro">Academic work spanning environmental economics, urban systems, international trade, macroeconomics, behavioral policy, and comparative political economy.</p>
+    </header>
+
+    <div class="papers-list">
+
+      <!-- P1 — EKC South Korea -->
+      <div class="paper-card" data-tags="environmental">
+        <span class="paper-number">P1</span>
+        <div>
+          <span class="paper-tag">Environmental Economics</span>
+          <h2 class="paper-title">An Empirical Analysis of the Environmental Kuznets Curve for PM10 Emissions in South Korea</h2>
+          <p class="paper-tagline">Why PM10 matters in the EKC debate</p>
+          <p class="paper-excerpt">Testing whether PM10 particulate emissions follow the classic inverted-U EKC pattern across South Korea's income range, 2005–2022 — with controls for rainfall and environmental investment.</p>
+          <p class="paper-meta">2024 · Prathivee Nairy · GIPE</p>
+        </div>
+        <span class="paper-arrow">↗</span>
+      </div>
+      <div class="paper-reader" id="reader-p1">
+        <button class="reader-close" onclick="closeReader('reader-p1')">Close ✕</button>
+        <p class="reader-label">Environmental Economics · Time-Series Analysis</p>
+        <h2 class="reader-title">An Empirical Analysis of the Environmental Kuznets Curve for PM10 Emissions in South Korea</h2>
+        <p class="reader-tagline">Why PM10 matters in the EKC debate</p>
+        <p class="reader-byline">Prathivee Nairy · 2024 · Gokhale Institute of Politics and Economics</p>
+        <div class="reader-body">
+          <p>The Environmental Kuznets Curve (EKC) hypothesis suggests that environmental damage first worsens during early industrialisation and then improves after income rises beyond a certain threshold. This project tests whether <strong>PM10 particulate emissions in South Korea</strong> follow the classic inverted-U EKC pattern over 2005–2022.</p>
+          <p>South Korea is a strong case for EKC analysis because it moved rapidly from low-income industrialisation to high-income OECD status in a relatively short time. PM10 is chosen because it captures local air-quality stress and public-health risk more directly than broader emissions indicators, and behaves differently from gaseous pollutants in the EKC literature.</p>
+          <h3>Theoretical Basis</h3>
+          <p>The EKC framework is built on three channels: <strong>scale effect</strong> (early industrial expansion raises emissions), <strong>composition effect</strong> (economy shifts toward services as income rises), and <strong>technique effect</strong> (cleaner technologies and regulatory capacity reduce pollution intensity). These three mechanisms explain why pollution may rise at low income levels but decline later.</p>
+          <h3>Data and Methodology</h3>
+          <p>The study uses annual time-series data for 2005–2022 from KOSIS, South Korea's official statistical database. Core variables are PM10 emissions, GDP, rainfall, and environmental investment by the industrial sector. PM10, GDP, and environmental investment were log-transformed to reduce skewness. GDP was mean-centred before squaring to reduce multicollinearity. Two specifications are estimated: a baseline EKC model and an extended model with rainfall as a meteorological control. Environmental investment is theoretically relevant but excluded from final estimation because it remains non-stationary.</p>
+          <h3>Regression Results</h3>
+          <p>The main regression results support an inverted-U relationship. The coefficient on centred log GDP is positive and statistically significant; the coefficient on squared centred log GDP is negative and significant — the standard EKC sign pattern. The model explains approximately <strong>74 percent</strong> of the variation in log PM10 emissions. The extended model, which includes rainfall, preserves the same sign pattern. Rainfall enters with the expected negative sign but does not reach statistical significance.</p>
+          <h3>Key Findings and Caveats</h3>
+          <p>The overall finding is a <strong>qualified EKC for South Korea's PM10 emissions.</strong> The evidence supports an inverted-U pattern, but the result should not be read as a universal law. The PM10 trajectory is shaped by industrial structure, rainfall, emissions inventory changes around 2015, and likely transboundary pollution from China — meaning the domestic EKC result is useful, but not the last word.</p>
+          <div class="strategy-box">
+            <p><strong>Policy implication:</strong> South Korea cannot rely on income growth alone to solve particulate pollution. Structural change away from heavy industry, stronger renewable energy investment, region-specific pollution control, and regional cooperation on transboundary pollution all remain necessary.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- P2 — Tokyo Urban Economics -->
+      <div class="paper-card" data-tags="urban">
+        <span class="paper-number">P2</span>
+        <div>
+          <span class="paper-tag">Urban Economics</span>
+          <h2 class="paper-title">Urban Economic Dynamics of Tokyo: Land Use, Transport, and Urban Challenges</h2>
+          <p class="paper-tagline">Why Tokyo is an urban economics case study</p>
+          <p class="paper-excerpt">How Tokyo's polycentric spatial structure, transit-oriented development, and vertical land use created remarkable efficiency — and reorganised, rather than eliminated, its urban problems.</p>
+          <p class="paper-meta">2025 · Prathivee Nairy · GIPE</p>
+        </div>
+        <span class="paper-arrow">↗</span>
+      </div>
+      <div class="paper-reader" id="reader-p2">
+        <button class="reader-close" onclick="closeReader('reader-p2')">Close ✕</button>
+        <p class="reader-label">Urban Economics · Land Use · Transport</p>
+        <h2 class="reader-title">Urban Economic Dynamics of Tokyo: Land Use, Transport, and Urban Challenges</h2>
+        <p class="reader-tagline">Why Tokyo is an urban economics case study</p>
+        <p class="reader-byline">Prathivee Nairy · 2025 · Gokhale Institute of Politics and Economics</p>
+        <div class="reader-body">
+          <p>Tokyo is not just a large city; it is one of the clearest examples of how land markets, transport systems, planning regimes, and demographic pressures interact over time to shape an urban economy. The paper asks how Tokyo's spatial structure evolved, why it functions as a <strong>polycentric metropolis</strong> rather than a single-core city, and what urban economics can learn from its success and its strains.</p>
+          <h3>Polycentric Structure and Vertical Densification</h3>
+          <p>Between 2001 and 2023, residential land use increased while green space and miscellaneous land uses declined — a clear shift toward residential intensification. In the central wards, higher-value mixed-use intensification reinforces the role of business hubs like Marunouchi, Shinjuku, Shibuya, and Ikebukuro. In suburban areas, green and industrial land gave way to a sharp rise in residential use. Tokyo's vertical expansion — particularly growth in mid-rise and high-rise buildings — is a direct response to land scarcity and agglomeration pressures. As bid-rent logic predicts, proximity to high-productivity areas increases land values and pushes developers toward taller, denser forms of land use.</p>
+          <h3>Transport Growth and the Induced Demand Problem</h3>
+          <p>Between 2005 and 2021, both central and outer regions saw increases in parking capacity, registered vehicles, road length, and traffic volume. Registered vehicles rose by approximately 46 percent. Traffic volume increased by 45.8 percent in Ku and 79.6 percent in Shi. Yet the road-area-to-traffic ratio fell in both regions. The paper interprets this through the <strong>induced demand hypothesis:</strong> expanding road infrastructure does not automatically relieve congestion because added capacity generates more vehicle use. Road building alone is not an efficient long-run solution to metropolitan mobility problems.</p>
+          <h3>Urban Challenges: Green Space, Aging, and Resilience</h3>
+          <p>Tokyo's tree canopy cover fell from 9.2 percent in 2013 to 7.3 percent in 2022, reflecting the pressure of redevelopment. The city's aging population puts pressure on care systems, public space, and urban design. Disaster resilience — shaped by repeated earthquake-driven policy adaptation from Ansei Edo to Tohoku — is treated not as a side topic but as a core component of Tokyo's urban economic design.</p>
+          <div class="strategy-box">
+            <p><strong>Main takeaway:</strong> Urban success does not eliminate urban problems; it often reorganises them. Tokyo shows how a city can remain globally competitive through density, connectivity, and planning, while still facing hard questions about resilience, equity, care, and sustainability.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- P3 — US-India Trade Uncertainty -->
+      <div class="paper-card" data-tags="trade">
+        <span class="paper-number">P3</span>
+        <div>
+          <span class="paper-tag">Trade · Microeconomics</span>
+          <h2 class="paper-title">Uncertainty as a Trade Barrier: Microeconomic Adjustments in U.S.–India Relations</h2>
+          <p class="paper-tagline">Analysing how tariff shocks and trade policy uncertainty reshaped India's export response to the United States</p>
+          <p class="paper-excerpt">A DiD analysis showing that the 2018 Trump tariff shocks simultaneously acted as a barrier and opened a window for trade reallocation — while domestic uncertainty remained a binding constraint.</p>
+          <p class="paper-meta">2025 · Prathivee Nairy · M.Sc. Sem 1 · GIPE</p>
+        </div>
+        <span class="paper-arrow">↗</span>
+      </div>
+      <div class="paper-reader" id="reader-p3">
+        <button class="reader-close" onclick="closeReader('reader-p3')">Close ✕</button>
+        <p class="reader-label">Trade · Microeconomics · Master's Semester 1</p>
+        <h2 class="reader-title">Uncertainty as a Trade Barrier: Microeconomic Adjustments in U.S.–India Relations</h2>
+        <p class="reader-tagline">Analysing how tariff shocks and trade policy uncertainty reshaped India's export response to the United States</p>
+        <p class="reader-byline">Prathivee Nairy · M.Sc. Semester 1 · 2025 · Gokhale Institute of Politics and Economics</p>
+        <div class="reader-body">
+          <p>This project studies how the Trump administration's 2018 tariff measures altered India's export performance to the United States, with particular attention to <strong>trade policy uncertainty as a microeconomic trade barrier.</strong> Tariff shocks did not operate only through direct price effects — they also generated anticipatory uncertainty that shaped firm behaviour, export decisions, and market adjustment.</p>
+          <h3>Analytical Frame</h3>
+          <p>The project connects tariff incidence, surplus redistribution, deadweight loss, sunk costs, real options, and export-market diversification to explain how firms respond when trade barriers are uncertain rather than fully known in advance. Evidence from the 2018 U.S. tariff episode shows near-complete pass-through causing U.S. consumers to bear most of the burden, while heightened uncertainty encouraged firms to diversify markets.</p>
+          <h3>Data and Methodology</h3>
+          <p>The empirical analysis uses monthly bilateral trade data for India's exports to the United States and the United Kingdom from January 2013 to June 2022, drawn from the Foreign Trade Statistics of India. Monthly Economic Policy Uncertainty indices come from the Baker-Bloom-Davis database. The project applies a <strong>Difference-in-Differences design,</strong> treating the United States as the tariff-exposed market after March 2018 and the United Kingdom as the control. All analysis was carried out in Python using pandas, statsmodels, and matplotlib.</p>
+          <h3>Main Findings</h3>
+          <p>The HAC-robust DiD estimates show a <strong>positive and statistically significant treatment effect.</strong> The interaction coefficient (γ = 0.1175) implies that India's exports to the United States rose by approximately 12.5 percent in the post-March 2018 period relative to the contemporaneous change for the United Kingdom. Overall model fit is very high (R² ≈ 0.99). India's domestic economic policy uncertainty entered with a coefficient of roughly −4.9 percent for a 100-point increase — negative and statistically significant.</p>
+          <p>The central result is not that tariffs were harmless. Rather, a disruptive tariff episode can simultaneously act as a barrier and open a window for trade reallocation. At the same time, <strong>uncertainty itself functions as a trade barrier</strong> — even when external tariff disruption generates export opportunities, domestic uncertainty weakens export performance.</p>
+          <div class="strategy-box">
+            <p><strong>Strategy:</strong> India should reduce dependence on the U.S. market, build a dedicated Trade Policy Uncertainty monitoring cell, and negotiate proactive tariff diplomacy rather than reactive concessions.</p>
+            <p><strong>Payoff:</strong> More durable export diversification, lower sensitivity to tariff shocks, and stronger policy response capacity.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- P4 — ICOR India -->
+      <div class="paper-card" data-tags="macro">
+        <span class="paper-number">P4</span>
+        <div>
+          <span class="paper-tag">Macroeconomics</span>
+          <h2 class="paper-title">Medium-Term Growth Prospects of India: Savings, Investment Efficiency, and Policy Implications</h2>
+          <p class="paper-tagline">Why medium-term growth has become an efficiency question</p>
+          <p class="paper-excerpt">Why India's growth challenge is not a shortage of savings, but a persistently high ICOR — and what that means for monetary policy, credit transmission, and capital allocation.</p>
+          <p class="paper-meta">2025 · Prathivee Nairy · GIPE</p>
+        </div>
+        <span class="paper-arrow">↗</span>
+      </div>
+      <div class="paper-reader" id="reader-p4">
+        <button class="reader-close" onclick="closeReader('reader-p4')">Close ✕</button>
+        <p class="reader-label">Macroeconomics · Growth Economics</p>
+        <h2 class="reader-title">Medium-Term Growth Prospects of India: Savings, Investment Efficiency, and Policy Implications</h2>
+        <p class="reader-tagline">Why medium-term growth has become an efficiency question</p>
+        <p class="reader-byline">Prathivee Nairy · 2025 · Gokhale Institute of Politics and Economics</p>
+        <div class="reader-body">
+          <p>India's growth story is often discussed in terms of investment volume, savings mobilisation, and headline GDP expansion. But the more important macroeconomic question is whether those savings are being converted into productive investment with sufficient efficiency. This project uses the <strong>Incremental Capital Output Ratio (ICOR)</strong> as its core diagnostic variable. A high ICOR indicates that more capital is required to generate each additional unit of output — pointing to declining efficiency in capital use.</p>
+          <h3>What the ICOR Trend Shows</h3>
+          <p>Gross Capital Formation increased steadily between 2012–13 and 2022–23. But the ICOR trend tells a more complicated story. It fell from 6.2 in 2012–13 to 3.7 in 2016–17, indicating a phase of relatively efficient investment. After that, it rose to 5.0 in 2018–19 and 8.1 in 2019–20, pointing to weakening capital productivity amid financial stress. During the pandemic year 2020–21, ICOR turned negative because output collapsed sharply. Although efficiency improved in recovery years, it remained below pre-2017 levels.</p>
+          <h3>Savings Are Stable, But That Is Not Enough</h3>
+          <p>A key finding is that India's growth problem is not fundamentally one of collapsing savings. The gross savings rate has remained broadly around 30 to 31 percent of GDP since 2016. <strong>The issue is that these savings are not being translated into productive capital formation with sufficient efficiency.</strong> Structural bottlenecks in credit transmission, balance-sheet stress, and uneven financial deepening weaken the link between savings and output.</p>
+          <h3>Capacity Utilisation and the Output Gap</h3>
+          <p>Manufacturing capacity utilisation recovered from 61.7 percent in 2020–21 to 75.3 percent in Q1 2025–26, showing a clear post-pandemic improvement. But order-book growth slowed from 12.3 percent year-on-year to 7.3 percent, while the inventory-to-sales ratio rose from 67.4 to 72.1 percent — suggesting that investment is being converted into stock accumulation rather than productive output.</p>
+          <h3>Medium-Term Projections</h3>
+          <p>Using an assumed ICOR of 4.20, the project estimates India's potential output growth could remain around 7 to 7.2 percent, while actual GDP growth is more likely to remain near 6.4 to 6.6 percent — implying a <strong>negative output gap.</strong> India's medium-term growth constraint is not one of absolute resource shortage. It is a problem of transmission and efficiency.</p>
+          <div class="strategy-box">
+            <p><strong>Strategy:</strong> Improve credit transmission, reduce borrowing costs, and raise the productivity of capital rather than relying only on higher aggregate investment.</p>
+            <p><strong>Payoff:</strong> A lower ICOR, a narrower output gap, and a more sustainable medium-term growth path driven by efficiency rather than volume.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- P5 — FASTag -->
+      <div class="paper-card" data-tags="behavioral">
+        <span class="paper-number">P5</span>
+        <div>
+          <span class="paper-tag">Behavioral Economics</span>
+          <h2 class="paper-title">The Digital Toll Era: India's FASTag Adoption from a Behavioral Economic Lens</h2>
+          <p class="paper-tagline">Why FASTag is more than a payment system</p>
+          <p class="paper-excerpt">Why a technically efficient tolling system still faces adoption resistance — and how defaults, loss framing, and implementation friction explain what cost-benefit logic alone cannot.</p>
+          <p class="paper-meta">2024 · Prathivee Nairy · GIPE</p>
+        </div>
+        <span class="paper-arrow">↗</span>
+      </div>
+      <div class="paper-reader" id="reader-p5">
+        <button class="reader-close" onclick="closeReader('reader-p5')">Close ✕</button>
+        <p class="reader-label">Behavioral Economics · Public Policy</p>
+        <h2 class="reader-title">The Digital Toll Era: India's FASTag Adoption from a Behavioral Economic Lens</h2>
+        <p class="reader-tagline">Why FASTag is more than a payment system</p>
+        <p class="reader-byline">Prathivee Nairy · 2024 · Gokhale Institute of Politics and Economics</p>
+        <div class="reader-body">
+          <p>FASTag is often presented as a simple technological upgrade in toll collection, but its adoption reveals a deeper behavioural and institutional story. This project studies FASTag as a case of <strong>behavioural public policy</strong> — asking not merely whether the system works technically, but why adoption has been uneven, why users resist even when the system is efficient, and which policy instruments are most effective in changing behaviour.</p>
+          <h3>Behavioural Barriers to Adoption</h3>
+          <p>FASTag adoption cannot be understood through standard cost-benefit logic alone. Users respond to hassle costs, habit formation, <strong>loss aversion,</strong> and perceived coercion. Status quo bias makes cash-based toll payment feel familiar. The issuance fee, recharge requirement, or fear of incorrect deduction can make FASTag feel like an additional burden rather than a prepaid convenience. Reactance bias can emerge when users interpret mandatory adoption as coercive rather than enabling.</p>
+          <h3>Survey and Choice Design</h3>
+          <p>The project uses a primary survey and hypothetical choice experiment to study how users respond to different policy framings. Respondents were exposed to penalty-based and reward-based incentives, as well as loss-framed and gain-framed messages. The findings indicate that <strong>loss-framed messaging and penalty-based incentives</strong> tend to be more effective than cashback-style rewards. Social proof also plays a role — users are more likely to adopt FASTag once they perceive it as the normal and expected mode of toll payment.</p>
+          <h3>Implementation Frictions</h3>
+          <p>Adoption problems are not purely behavioural. Technical failures, poor connectivity, RFID reader issues, recharging difficulties, refund delays, and weak rural awareness all affect user experience. A digital public system succeeds only when the institutional layer is reliable. Repeated errors and inconsistent enforcement across toll plazas weaken the system's credibility and increase the perceived cost of participation.</p>
+          <h3>Policy Design</h3>
+          <p>One key recommendation is to shift from user-initiated adoption to <strong>default enrollment</strong> at the point of vehicle purchase. Another is to reframe FASTag fees as prepaid toll credit rather than an upfront charge — reducing the perception of loss. Auto-recharge as a default, stronger social norm messaging, and real-time reminders can further reduce friction and prevent avoidable non-compliance.</p>
+          <div class="strategy-box">
+            <p><strong>Strategy:</strong> Build adoption around defaults, reduce friction at every stage, and use behavioural nudges rather than relying only on mandates.</p>
+            <p><strong>Payoff:</strong> Higher compliance, faster toll processing, lower waiting time, and more durable adoption of digital tolling.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- P6 — Pentagon of Capitalism -->
+      <div class="paper-card" data-tags="geoeconomics">
+        <span class="paper-number">P6</span>
+        <div>
+          <span class="paper-tag">Geoeconomics · Comparative Political Economy</span>
+          <h2 class="paper-title">The Pentagon of Capitalism: Mapping India Inside a Comparative Framework</h2>
+          <p class="paper-tagline">How India's hybrid political economy sits between liberal markets, developmental states, party-state capitalism, and resource-driven models</p>
+          <p class="paper-excerpt">A comparative analysis placing India as an interior, hybrid point in a five-vertex map of capitalist models — and what that means for India's geoeconomic instruments and policy pathways.</p>
+          <p class="paper-meta">2025 · Prathivee Nairy · GIPE</p>
+        </div>
+        <span class="paper-arrow">↗</span>
+      </div>
+      <div class="paper-reader" id="reader-p6">
+        <button class="reader-close" onclick="closeReader('reader-p6')">Close ✕</button>
+        <p class="reader-label">Geoeconomics · Comparative Political Economy</p>
+        <h2 class="reader-title">The Pentagon of Capitalism: Mapping India Inside a Comparative Framework</h2>
+        <p class="reader-tagline">How India's hybrid political economy sits between liberal markets, developmental states, party-state capitalism, and resource-driven models</p>
+        <p class="reader-byline">Prathivee Nairy · 2025 · Gokhale Institute of Politics and Economics</p>
+        <div class="reader-body">
+          <p>This project moves beyond a single, monolithic notion of "capitalism." States organise markets, property, and technology in several durable ways; each has distinct implications for geoeconomic capacity, industrial policy, and global strategy. To capture this plurality, I constructed a <strong>pentagon</strong> whose vertices are five representative capitalist models: the United States, the United Kingdom, Japan, China, and Russia. The goal was to place India inside that pentagon and explain why it belongs to the interior — sharing features with each vertex but matching none fully.</p>
+          <h3>The Five Vertices</h3>
+          <p><strong>United States</strong> — finance-dense, innovation-led liberal market economy with deep capital markets, global financial infrastructure, and world-leading technology ecosystems.</p>
+          <p><strong>United Kingdom</strong> — global financial node amplifying liberal-market logics through financial intermediation and regulatory standard-setting.</p>
+          <p><strong>Japan</strong> — high-technology developmentalism: strong manufacturing, high R&amp;D intensity, persistent state-corporate coordination, and quality-driven supply chain integration.</p>
+          <p><strong>China</strong> — party-state capitalism: centralised political control enabling aggressive industrial policy, targeted infrastructure finance, and strategic input control.</p>
+          <p><strong>Russia</strong> — resource-state, rent-based leverage: patrimonial state control of strategic assets, rent extraction, and narrow geoeconomic instruments based on commodity exports.</p>
+          <h3>Why India Is an Interior Point</h3>
+          <p>India's large domestic market and advanced services exports resemble liberal-market advantages, but India lacks the depth of financial intermediation seen in the U.S. and U.K. India has been a developmental state in pockets, but lacks the Japanese-level coordination or the Sino-style party-state capacity. Unlike Russia, India is not primarily a commodity exporter. Put together, India is a <strong>hybrid configuration</strong> — state-permeated markets, partial industrial policy, service-led growth, and strategic autonomy in diplomacy.</p>
+          <h3>Geoeconomic Practice</h3>
+          <p>India adopts selective, pragmatic instruments rather than comprehensive packages: selective market opening through trade agreements, digital public goods (UPI, ID systems) as a distinctive soft-power asset, production-linked incentives and targeted industrial policy, and strategic autonomy through hedging and engagement rather than coercive economic levers.</p>
+          <div class="strategy-box">
+            <p><strong>Strategy (project claim):</strong> India is best conceptualised as an evolving interior hybrid — drawing selectively from liberal markets, developmental policy, and digital-state strengths rather than aiming to replicate any single vertex wholesale.</p>
+            <p><strong>Payoff:</strong> India's core advantage lies in its large market, digital public infrastructure, youthful demographic, and strategic autonomy. The major constraints are limited industrial depth, lower R&amp;D intensity, uneven state capacity, and weaker financial leverage relative to Anglo-American and Chinese models.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- P7 — Friends Game Theory -->
+      <div class="paper-card" data-tags="gametheory">
+        <span class="paper-number">P7</span>
+        <div>
+          <span class="paper-tag">Game Theory</span>
+          <h2 class="paper-title">Playing the Game in Friends: A Sequential Game-Theoretic Reading of "The One Where Everybody Finds Out"</h2>
+          <p class="paper-tagline">Mapping a sitcom episode as a sequential chicken game</p>
+          <p class="paper-excerpt">How escalating pressure, strategic hesitation, and character-consistent payoffs make a Friends episode a textbook case of sequential game theory.</p>
+          <p class="paper-meta">2024 · Prathivee Nairy · GIPE</p>
+        </div>
+        <span class="paper-arrow">↗</span>
+      </div>
+      <div class="paper-reader" id="reader-p7">
+        <button class="reader-close" onclick="closeReader('reader-p7')">Close ✕</button>
+        <p class="reader-label">Game Theory · Microeconomics</p>
+        <h2 class="reader-title">Playing the Game in Friends: A Sequential Game-Theoretic Reading of "The One Where Everybody Finds Out"</h2>
+        <p class="reader-tagline">Mapping a sitcom episode as a sequential chicken game</p>
+        <p class="reader-byline">Prathivee Nairy · 2024 · Gokhale Institute of Politics and Economics</p>
+        <div class="reader-body">
+          <p>Game theory lets you look at a familiar story and see the structure underneath it. In the episode <em>"The One Where Everybody Finds Out,"</em> the tension does not come from random dialogue — it comes from <strong>strategic interaction, best responses, belief formation, and character-consistent moves.</strong> The assignment built the game from scratch and mapped the episode as a sequential game.</p>
+          <h3>Strategy Space</h3>
+          <p>The sequential interaction is played mainly through Phoebe and Chandler. The strategy set is clean: <strong>Phoebe — Confront or Tease. Chandler — Confess or Not confess.</strong> Each move changes the information set and emotional pressure on the next player, making the outcome depend on the order of play. This is exactly what makes the episode sequential rather than simultaneous.</p>
+          <h3>Payoff Structure</h3>
+          <p>When Phoebe confronts early, the payoff is (−1, −1): Monica and Chandler are not ready to tell the truth, and Phoebe and Rachel lose their strategic advantage. No one gets what they want, and both sides lose leverage — a mutually bad intermediate outcome in a chicken-style game.</p>
+          <p>At the final decision point, payoffs are asymmetric. <strong>If Chandler confesses: (1, 0). If Chandler does not confess: (−2, −1).</strong> If Chandler confesses, Phoebe achieves her objective. Chandler's payoff is lower — he has chickened out — but confession also resolves the tension. If Chandler does not confess, Phoebe gets −2 because she pushed all the way to the kiss and still failed. Chandler gets −1 because even preserving the secret does not feel like a clean victory.</p>
+          <h3>Strategy Profile and Outcome</h3>
+          <p>Final strategy profile: <strong>(Tease, Tease, Not Confess → Confess). Final payoff: (1, 0).</strong> Phoebe's strategy is to keep teasing until Chandler breaks. Chandler's eventual best response is to confess. The episode reaches an outcome where the threatening player succeeds because the other player's cost of continued resistance becomes higher than the cost of admitting the truth — the defining logic of a sequential chicken game.</p>
+          <div class="strategy-box">
+            <p><strong>Takeaway:</strong> What makes this episode a strong game theory case is that the characters are constrained by their personalities, narrowing the strategy set and making the game cleaner to analyse. In a regular abstract game, players can choose any move. Here, character-consistent strategy means the payoffs feel earned rather than arbitrary — and the resolution feels inevitable in retrospect.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ADD NEW PAPERS BELOW THIS LINE
+           Copy a paper-card + paper-reader block above and increment the number -->
+
+    </div>
+  </main>
+</div>
+
+<script src="js/main.js"></script>
+<script>
+  // Scroll reveal
+  const cards = document.querySelectorAll('.paper-card');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach((e,i) => {
+      if (e.isIntersecting) { setTimeout(() => e.target.classList.add('visible'), i*80); obs.unobserve(e.target); }
+    });
+  }, { threshold:0.08 });
+  cards.forEach(c => obs.observe(c));
+
+  // Toggle inline reader
+  cards.forEach(card => {
+    card.addEventListener('click', () => {
+      const next = card.nextElementSibling;
+      if (!next || !next.classList.contains('paper-reader')) return;
+      const isOpen = next.classList.contains('open');
+      document.querySelectorAll('.paper-reader.open').forEach(r => r.classList.remove('open'));
+      if (!isOpen) { next.classList.add('open'); next.scrollIntoView({ behavior:'smooth', block:'nearest' }); }
+    });
+  });
+
+  function closeReader(id) {
+    event.stopPropagation();
+    document.getElementById(id).classList.remove('open');
+  }
+
+  // Sidebar filter
+  document.querySelectorAll('[data-filter]').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.preventDefault();
+      document.querySelectorAll('[data-filter]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const f = btn.dataset.filter;
+      cards.forEach(c => {
+        const show = f === 'all' || c.dataset.tags.includes(f);
+        c.style.display = show ? 'grid' : 'none';
+        const reader = c.nextElementSibling;
+        if (reader && reader.classList.contains('paper-reader') && !show) reader.classList.remove('open');
+      });
+    });
+  });
+</script>
+</body>
+</html>
