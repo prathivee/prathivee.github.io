@@ -495,3 +495,101 @@ img {
     font-size: 10px;
   }
 }
+
+
+
+/* ============================================================
+   READABILITY UPGRADE 29-07-26 11:45am
+   ============================================================ */
+
+/* --- Body text on all inner pages (light-page) --- */
+.light-page body,
+.light-page {
+  font-size: 17px;
+  line-height: 1.9;
+}
+
+/* --- Bio / prose text --- */
+.bio-text {
+  font-size: 17px !important;
+  line-height: 1.95 !important;
+  color: #2e3a2e !important;   /* darker than before, easier on eyes */
+}
+
+/* --- Article reader body --- */
+.reader-body {
+  font-size: 17px !important;
+  line-height: 2.0 !important;
+  color: #2e3a2e !important;
+}
+
+/* --- Thoughts / literary prose --- */
+.thought-body,
+.thought-text {
+  font-size: 18px !important;
+  line-height: 2.1 !important;
+  color: #2e3a2e !important;
+}
+
+/* --- Article card titles on articles.html --- */
+.article-title {
+  font-size: clamp(22px, 2.5vw, 30px) !important;
+}
+
+/* --- Article excerpt / teaser lines --- */
+.article-excerpt {
+  font-size: 15px !important;
+  line-height: 1.75 !important;
+  opacity: 0.85 !important;   /* was too faint before */
+  color: #3a4a3a !important;
+}
+
+/* --- Timeline descriptions on about.html --- */
+.timeline-desc {
+  font-size: 14px !important;
+  line-height: 1.75 !important;
+  color: #3a4a3a !important;
+}
+
+/* --- Sidebar links — slightly bigger for readability --- */
+.sidebar-links a {
+  font-size: 14px !important;
+  line-height: 1.6 !important;
+}
+
+/* --- Quick facts on about.html --- */
+.quick-fact-value {
+  font-size: 15px !important;
+  line-height: 1.65 !important;
+}
+
+/* --- News entries --- */
+.news-date {
+  font-size: 13px !important;
+}
+.news-text,
+.news-body {
+  font-size: 16px !important;
+  line-height: 1.85 !important;
+  color: #2e3a2e !important;
+}
+
+/* --- Photography captions --- */
+.photo-caption,
+.gallery-caption {
+  font-size: 14px !important;
+  line-height: 1.65 !important;
+}
+
+/* --- Page header tagline / intro paragraph --- */
+.page-intro {
+  font-size: 17px !important;
+  line-height: 1.85 !important;
+  color: #3a4a3a !important;
+}
+
+/* --- Skill tags --- */
+.skill-tag {
+  font-size: 14px !important;
+  line-height: 1.55 !important;
+}
